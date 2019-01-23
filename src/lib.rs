@@ -1,10 +1,4 @@
 pub mod vec2;
 
+// pub use self::vec2::Vec2;
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}

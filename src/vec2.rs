@@ -1,11 +1,14 @@
-#[allow(dead_code)]
+#[warn(dead_code)]
+extern crate wasm_bindgen;
+use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
 #[derive(Debug)]
 pub struct Vec2 {
     x: f64,
     y: f64,
 }
-
+#[wasm_bindgen]
 impl Vec2 {
     fn new(x: f64, y: f64) -> Vec2 {
         return Vec2 { x, y };
