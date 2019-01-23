@@ -1,6 +1,8 @@
 #[warn(dead_code)]
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
+extern crate js_sys;
+use js_sys::{Array, Float64Array};
 
 #[wasm_bindgen]
 pub struct Vec2 {
@@ -14,9 +16,10 @@ impl Vec2 {
     pub fn new(x: f64, y: f64) -> Vec2 {
         return Vec2 { x, y };
     }
-    // pub fn data(&self) -> (f64, f64) {
-    //     return (self.x, self.y);
-    // }
+    pub fn data(&self) -> Float64Array {
+        // JsValue::
+        return Float64Array::new(&JsValue::from_f64(self.x));
+    }
     pub fn add(&mut self, rhs: Vec2) {
         self.x += rhs.x;
         self.y += rhs.y;
