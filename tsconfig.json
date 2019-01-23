@@ -1,0 +1,44 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "jsxFactory": "hpc.h",
+    "lib": [
+      "webworker",
+      "dom",
+      "es2015",
+      "es2017",
+      "es2016",
+      "es2018",
+      "esnext"
+    ],
+    "noImplicitAny": false,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./typings"
+    ],
+    "outDir": "build/output",
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "wasm": [
+        "wasm/pkg"
+      ]
+    },
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "examples",
+    "typings"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
