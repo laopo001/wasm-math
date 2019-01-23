@@ -4,8 +4,8 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub struct Vec2 {
-    x: f64,
-    y: f64,
+    pub x: f64,
+    pub y: f64,
 }
 
 #[wasm_bindgen]
@@ -14,9 +14,9 @@ impl Vec2 {
     pub fn new(x: f64, y: f64) -> Vec2 {
         return Vec2 { x, y };
     }
-    pub fn data(&self) -> (f64, f64) {
-        return (self.x, self.y);
-    }
+    // pub fn data(&self) -> (f64, f64) {
+    //     return (self.x, self.y);
+    // }
     pub fn add(&mut self, rhs: Vec2) {
         self.x += rhs.x;
         self.y += rhs.y;
@@ -33,13 +33,14 @@ impl Vec2 {
         return self.x * rhs.x + self.y * rhs.y;
     }
     pub fn length(&self) -> f64 {
-        self.lengthSq().sqrt()
+        self.length_sq().sqrt()
     }
-    pub fn lengthSq(&self) -> f64 {
+    #[wasm_bindgen(js_name = lengthSq)]
+    pub fn length_sq(&self) -> f64 {
         return self.x * self.x + self.y * self.y;
     }
     pub fn normalize(&mut self) {
-        let sq = self.lengthSq();
+        let sq = self.length_sq();
         let inv = 1.0 / sq;
         self.x *= inv;
         self.y *= inv;
@@ -48,7 +49,6 @@ impl Vec2 {
         self.x *= scalar;
         self.y *= scalar;
     }
-
     pub fn set(&mut self, x: f64, y: f64) {
         self.x = x;
         self.y = y;
@@ -61,10 +61,9 @@ fn vec2_add() {
     let b = Vec2::new(1.0, 1.0);
     a.add(b);
     assert_eq!(a.x, 1.0);
-    assert_eq!(a.y, 1.0);
+    a.y = 2.0;
+    assert_eq!(a.y, 2.0);
 }
-
-
 
 #[test]
 fn vec2_length() {

@@ -27,16 +27,17 @@
     "outDir": "build/output",
     "types": [],
     "baseUrl": ".",
-    "paths": {
-      "wasm": [
-        "wasm/pkg"
-      ]
-    },
+    // "paths": {
+    //   "wasm": [
+    //     "pkg"
+    //   ]
+    // },
     "allowSyntheticDefaultImports": true
   },
   "include": [
     "examples",
-    "typings"
+    "typings",
+    "pkg",
   ],
   "exclude": [
     "node_modules"
