@@ -37,7 +37,8 @@
   "scripts": {
     "start": "webpack --colors --watch",
     "server": "webpack-dev-server",
-    "build": "webpack --colors"
+    "build": "wasm-pack build --dev",
+    "build:prod": "wasm-pack build --release"
   },
   "engines": {
     "node": ">= 0.6.12"
