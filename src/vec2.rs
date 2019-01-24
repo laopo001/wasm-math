@@ -1,10 +1,8 @@
 #[warn(dead_code)]
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
-use cfg_if::cfg_if;
 
 #[wasm_bindgen]
-#[derive(Clone)]
 pub struct Vec2 {
     pub x: f64,
     pub y: f64,
@@ -16,15 +14,7 @@ impl Vec2 {
     pub fn new(x: f64, y: f64) -> Vec2 {
         return Vec2 { x, y };
     }
-    // cfg_if! {
-    //     if #[cfg(native)] {
-    //         pub fn data2(&self) -> [f64; 2] {
-    //             return [self.x, self.y];
-    //         }
-    //     }
-    // }
-
-    pub fn data(&self) -> Box<[f64]> {
+    pub fn data(&self) -> Box<[f64;2]> {
         return Box::new([self.x, self.y]);
     }
     pub fn add(&mut self, other: Vec2) {
