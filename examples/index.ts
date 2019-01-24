@@ -5,17 +5,20 @@
  * @author: liaodh
  * @summary: short description for the file
  * -----
- * Last Modified: Wednesday, January 23rd 2019, 7:14:35 pm
+ * Last Modified: Thursday, January 24th 2019, 1:29:19 pm
  * Modified By: liaodh
  * -----
  * Copyright (c) 2018 jiguang
  */
 
-import * as wasm from '../pkg/wasm_math.js';
+import { Vec2 } from '../pkg/wasm_math.js';
 
-let module = wasm as any;
-let vec2 = new module.Vec2();
-// vec2.x = 1.0;
+let vec2 = new Vec2(0, 0);
 
-console.log(vec2)
-
+console.time('1')
+for (let i = 0; i < 100000; i++) {
+    let vec2 = new Vec2(0, 0);
+    vec2.data()
+}
+console.timeEnd('1')
+console.timeStamp()

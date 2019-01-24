@@ -3,9 +3,10 @@ extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
+#[derive(Clone)]
 pub struct Vec2 {
-    x: f64,
-    y: f64,
+    pub x: f64,
+    pub y: f64,
 }
 
 #[wasm_bindgen]
@@ -14,32 +15,33 @@ impl Vec2 {
     pub fn new(x: f64, y: f64) -> Vec2 {
         return Vec2 { x, y };
     }
-    pub fn data(&self) -> (f64, f64) {
-        return (self.x, self.y);
+    pub fn data(&self) -> Box<[f64]> {
+        return Box::new([self.x, self.y]);
     }
-    pub fn add(&mut self, rhs: Vec2) {
-        self.x += rhs.x;
-        self.y += rhs.y;
+    pub fn add(&mut self, other: Vec2) {
+        self.x += other.x;
+        self.y += other.y;
     }
-    pub fn sub(&mut self, rhs: Vec2) {
-        self.x -= rhs.x;
-        self.y -= rhs.y;
+    pub fn sub(&mut self, other: Vec2) {
+        self.x -= other.x;
+        self.y -= other.y;
     }
-    pub fn mul(&mut self, rhs: Vec2) {
-        self.x *= rhs.x;
-        self.y *= rhs.y;
+    pub fn mul(&mut self, other: Vec2) {
+        self.x *= other.x;
+        self.y *= other.y;
     }
-    pub fn dot(&self, rhs: Vec2) -> f64 {
-        return self.x * rhs.x + self.y * rhs.y;
+    pub fn dot(&self, other: Vec2) -> f64 {
+        return self.x * other.x + self.y * other.y;
     }
-    pub fn length(&self) -> f64 {
-        self.lengthSq().sqrt()
-    }
-    pub fn lengthSq(&self) -> f64 {
+    #[wasm_bindgen(js_name = lengthSq)]
+    pub fn length_sq(&self) -> f64 {
         return self.x * self.x + self.y * self.y;
     }
+    pub fn length(&self) -> f64 {
+        self.length_sq().sqrt()
+    }
     pub fn normalize(&mut self) {
-        let sq = self.lengthSq();
+        let sq = self.length_sq();
         let inv = 1.0 / sq;
         self.x *= inv;
         self.y *= inv;
@@ -53,6 +55,16 @@ impl Vec2 {
         self.x = x;
         self.y = y;
     }
+    pub fn clone(&self) -> Self {
+        return Vec2::new(self.x, self.y);
+    }
+    pub fn equals(&self, other: Vec2) -> bool {
+        return self.x == other.x && self.y == other.y;
+    }
+    pub fn lerp(&mut self, l: Vec2, r: Vec2, alpha: f64) {
+        self.x = l.x + alpha * (r.x - l.x);
+        self.y = l.y + alpha * (r.y - l.y);
+    }
 }
 
 #[test]
@@ -64,10 +76,14 @@ fn vec2_add() {
     assert_eq!(a.y, 1.0);
 }
 
-
-
 #[test]
 fn vec2_length() {
     let a = Vec2::new(3.0, 4.0);
     assert_eq!(a.length(), 5.0);
+}
+
+#[test]
+fn vec2_clone() {
+    let a = Vec2::new(3.0, 4.0);
+    assert_eq!(a.clone().length(), 5.0);
 }
