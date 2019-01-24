@@ -20,7 +20,7 @@ impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
         return Vec3 { x, y, z };
     }
-    pub fn data(&self) -> Box<[f64;3]> {
+    pub fn data(&self) -> Box<[f64]> {
         return Box::new([self.x, self.y, self.z]);
     }
     pub fn add(&mut self, other: Vec3) {

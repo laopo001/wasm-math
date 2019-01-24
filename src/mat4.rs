@@ -5,12 +5,13 @@ use std::rc::Rc;
 use std::cell::RefCell;
 
 use crate::vec4;
-
+#[wasm_bindgen]
 pub struct Mat4 {
-    pub data: [f64; 16],
+    data: Vec<f64>,
 }
-
+#[wasm_bindgen]
 impl Mat4 {
+    #[wasm_bindgen(constructor)]
     pub fn new(
         n0: f64,
         n1: f64,
@@ -29,14 +30,11 @@ impl Mat4 {
         n14: f64,
         n15: f64,
     ) -> Self {
-        let a  = [
-            n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15,
-        ];
-        return Mat4 { data: a };
+        return Mat4 { data: vec![n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15] };
     }
-    pub fn add(&mut self, other: &Mat4) {
+    pub fn add(&mut self, other: Mat4) {
         let a = other.data;
-        let mut r = self.data;
+        let mut r = self.data.as_mut_slice();
         r[0] += a[0];
         r[1] += a[1];
         r[2] += a[2];
@@ -53,7 +51,9 @@ impl Mat4 {
         r[13] += a[13];
         r[14] += a[14];
         r[15] += a[15];
-        self.data = r;
+    }
+    pub fn data(&self) -> Box<[f64]> {
+        self.data.clone().into_boxed_slice()
     }
 }
 
@@ -65,6 +65,6 @@ fn mat4_add() {
     let mut mat2 = Mat4::new(
         1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
     );
-    mat1.add(&mat2);
+    mat1.add(mat2);
     assert_eq!(mat1.data[0], 1.0);
 }

@@ -11,10 +11,22 @@
  * Copyright (c) 2018 jiguang
  */
 
-import { Vec2, test } from '../pkg/wasm_math.js';
+import { Vec2, Mat4 } from '../pkg/wasm_math.js';
 
 let vec2 = new Vec2(0, 0);
-test();
+let data = vec2.data();
+console.log(data)
+data[0]=1;
+console.log(vec2,data,vec2.data())
+
+let m = new Mat4(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+let m2 = new Mat4(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+m.add(m2)
+console.log(
+    m.data()
+)
+
+
 console.time('1')
 for (let i = 0; i < 100000; i++) {
     let vec2 = new Vec2(0, 0);
