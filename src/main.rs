@@ -1,4 +1,6 @@
 use wasm_math::mat4::Mat4;
+use wasm_math::vec3::Vec3;
+use wasm_math::quat::Quat;
 use std::rc::Rc;
 use std::cell::RefCell;
 
@@ -24,6 +26,14 @@ fn main (){
     let mut c =vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
     test(&c);
     println!("{:?}", c[0]);
+
+    let mut q = Quat::default();
+    q.setFromEulerAngles(0.0,90.0,90.0);
+    println!("{:?}", q.data());
+    let v = Vec3::new(1.0, 0.0, 0.0);
+    let mut res = Vec3::default();
+    q.transformVector(&v, &mut res);
+    println!("{:?}", res.data());
 }
 
 fn test(v:&Vec<f64>){

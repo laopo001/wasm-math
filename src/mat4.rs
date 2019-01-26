@@ -18,7 +18,7 @@ extern "C" {
 
 #[wasm_bindgen]
 pub struct Mat4 {
-    data: Vec<f64>,
+    pub(crate) data: Vec<f64>,
 }
 
 #[wasm_bindgen]
