@@ -7,6 +7,7 @@ use std::cell::RefCell;
 
 use crate::vec3::Vec3;
 use crate::vec4::Vec4;
+use crate::quat::Quat;
 use crate::math::DEG_TO_RAD;
 
 #[wasm_bindgen]
@@ -206,6 +207,9 @@ impl Mat4 {
         m[13] = 0.0;
         m[14] = 0.0;
         m[15] = 1.0;
+    }
+    pub fn setTRS(&mut self, t: &Vec3, r: &Quat, s: &Vec3) {
+
     }
     #[wasm_bindgen(js_name = setScale)]
     pub fn set_scale(&mut self, x: f64, y: f64, z: f64) {

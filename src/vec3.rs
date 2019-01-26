@@ -51,6 +51,9 @@ impl Vec3 {
     }
     pub fn normalize(&mut self) {
         let sq = self.length_sq();
+        if sq == 0.0 {
+            return;
+        }
         let inv = 1.0 / sq;
         self.x *= inv;
         self.y *= inv;
