@@ -208,7 +208,8 @@ impl Mat4 {
         m[14] = 0.0;
         m[15] = 1.0;
     }
-    pub fn setTRS(&mut self, t: &Vec3, r: &Quat, s: &Vec3) {
+    #[wasm_bindgen(js_name = setFromTRS)]
+    pub fn set_from_trs(&mut self, t: &Vec3, r: &Quat, s: &Vec3) {
 
     }
     #[wasm_bindgen(js_name = setScale)]

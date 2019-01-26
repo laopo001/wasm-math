@@ -1,6 +1,9 @@
 extern crate cfg_if;
+
 use cfg_if::cfg_if;
+
 extern crate wasm_bindgen;
+
 use wasm_bindgen::prelude::*;
 
 pub mod math;
@@ -11,21 +14,18 @@ pub mod vec4;
 pub mod quat;
 // pub use self::vec2::Vec2;
 
-#[wasm_bindgen(start)]
-pub fn main() {
-    cfg_if! {
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: &str);
+}
+
+cfg_if! {
         if #[cfg(feature = "web")] {
-
-            #[wasm_bindgen]
-            extern "C" {
-                #[wasm_bindgen(js_namespace = console)]
-                fn log(s: &str);
-            }
-
-            #[wasm_bindgen]
-            pub fn test(){
-                log("start");
+            #[wasm_bindgen(start)]
+            pub fn main() {
+                log("wasm-math loaded");
             }
         }
     }
-}
+
