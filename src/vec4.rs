@@ -1,5 +1,6 @@
 #[warn(dead_code)]
 extern crate wasm_bindgen;
+
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -61,12 +62,14 @@ impl Vec4 {
         self.z *= scalar;
         self.w *= scalar;
     }
-
     pub fn set(&mut self, x: f64, y: f64, z: f64, w: f64) {
         self.x = x;
         self.y = y;
         self.z = z;
         self.w = w;
+    }
+    pub fn copy(&mut self, v: Vec4) {
+        self.set(v.x, v.y, v.z, v.w);
     }
     pub fn clone(&self) -> Self {
         return Vec4::new(self.x, self.y, self.z, self.w);

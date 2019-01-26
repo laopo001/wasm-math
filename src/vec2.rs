@@ -1,5 +1,6 @@
 #[warn(dead_code)]
 extern crate wasm_bindgen;
+
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -17,19 +18,19 @@ impl Vec2 {
     pub fn data(&self) -> Box<[f64]> {
         return Box::new([self.x, self.y]);
     }
-    pub fn add(&mut self, other: Vec2) {
+    pub fn add(&mut self, other: &Vec2) {
         self.x += other.x;
         self.y += other.y;
     }
-    pub fn sub(&mut self, other: Vec2) {
+    pub fn sub(&mut self, other: &Vec2) {
         self.x -= other.x;
         self.y -= other.y;
     }
-    pub fn mul(&mut self, other: Vec2) {
+    pub fn mul(&mut self, other: &Vec2) {
         self.x *= other.x;
         self.y *= other.y;
     }
-    pub fn dot(&self, other: Vec2) -> f64 {
+    pub fn dot(&self, other: &Vec2) -> f64 {
         return self.x * other.x + self.y * other.y;
     }
     #[wasm_bindgen(js_name = lengthSq)]
@@ -49,18 +50,20 @@ impl Vec2 {
         self.x *= scalar;
         self.y *= scalar;
     }
-
     pub fn set(&mut self, x: f64, y: f64) {
         self.x = x;
         self.y = y;
     }
+    pub fn copy(&mut self, v: &Vec2) {
+        self.set(v.x, v.y);
+    }
     pub fn clone(&self) -> Self {
         return Vec2::new(self.x, self.y);
     }
-    pub fn equals(&self, other: Vec2) -> bool {
+    pub fn equals(&self, other: &Vec2) -> bool {
         return self.x == other.x && self.y == other.y;
     }
-    pub fn lerp(&mut self, l: Vec2, r: Vec2, alpha: f64) {
+    pub fn lerp(&mut self, l: &Vec2, r: &Vec2, alpha: f64) {
         self.x = l.x + alpha * (r.x - l.x);
         self.y = l.y + alpha * (r.y - l.y);
     }
@@ -70,9 +73,9 @@ impl Vec2 {
 fn vec2_add() {
     let mut a = Vec2::new(0.0, 0.0);
     let b = Vec2::new(1.0, 1.0);
-    a.add(b);
+    a.add(&b);
     assert_eq!(a.x, 1.0);
-    assert_eq!(a.y, 1.0);
+    assert_eq!(b.y, 1.0);
 }
 
 #[test]

@@ -1,5 +1,6 @@
 #[warn(dead_code)]
 extern crate wasm_bindgen;
+
 // use std::clone::Clone;
 use wasm_bindgen::prelude::*;
 // #[wasm_bindgen(typescript_custom_section)]
@@ -64,6 +65,9 @@ impl Vec3 {
         self.x = x;
         self.y = y;
         self.z = z;
+    }
+    pub fn copy(&mut self, v: Vec3) {
+        self.set(v.x, v.y, v.z);
     }
     pub fn clone(&self) -> Self {
         return Vec3::new(self.x, self.y, self.z);

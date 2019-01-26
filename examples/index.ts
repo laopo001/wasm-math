@@ -19,12 +19,14 @@ console.log(data)
 data[0]=1;
 console.log(vec2,data,vec2.data())
 
-let m = new Mat4(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-let m2 = new Mat4(1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
-m.add(m2)
+let m =  Mat4.get_identity();
+let m2 = Mat4.get_identity();
+m.invert()
+
 console.log(
-    m.data()
+    m.data(),m2.data(), m.equals(m2)
 )
+console.dir(Mat4)
 
 
 console.time('1')
