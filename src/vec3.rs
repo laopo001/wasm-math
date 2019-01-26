@@ -24,12 +24,12 @@ impl Vec3 {
     pub fn data(&self) -> Box<[f64]> {
         return Box::new([self.x, self.y, self.z]);
     }
-    pub fn add(&mut self, other: Vec3) {
+    pub fn add(&mut self, other: &Vec3) {
         self.x += other.x;
         self.y += other.y;
         self.z += other.z;
     }
-    pub fn sub(&mut self, other: Vec3) {
+    pub fn sub(&mut self, other: &Vec3) {
         self.x -= other.x;
         self.y -= other.y;
         self.z -= other.z;
@@ -39,7 +39,7 @@ impl Vec3 {
         self.y *= other.y;
         self.z *= other.z;
     }
-    pub fn dot(&self, other: Vec3) -> f64 {
+    pub fn dot(&self, other: &Vec3) -> f64 {
         return self.x * other.x + self.y * other.y + self.z * other.z;
     }
     #[wasm_bindgen(js_name = lengthSq)]
@@ -66,16 +66,16 @@ impl Vec3 {
         self.y = y;
         self.z = z;
     }
-    pub fn copy(&mut self, v: Vec3) {
+    pub fn copy(&mut self, v: &Vec3) {
         self.set(v.x, v.y, v.z);
     }
     pub fn clone(&self) -> Self {
         return Vec3::new(self.x, self.y, self.z);
     }
-    pub fn equals(&self, other: Vec3) -> bool {
+    pub fn equals(&self, other: &Vec3) -> bool {
         return self.x == other.x && self.y == other.y && self.z == other.z;
     }
-    pub fn lerp(&mut self, l: Vec3, r: Vec3, alpha: f64) {
+    pub fn lerp(&mut self, l: &Vec3, r: &Vec3, alpha: f64) {
         self.x = l.x + alpha * (r.x - l.x);
         self.y = l.y + alpha * (r.y - l.y);
         self.z = l.z + alpha * (r.z - l.z);

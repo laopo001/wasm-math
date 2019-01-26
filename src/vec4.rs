@@ -20,25 +20,25 @@ impl Vec4 {
     pub fn data(&self) -> Box<[f64]> {
         return Box::new([self.x, self.y, self.z, self.w]);
     }
-    pub fn add(&mut self, other: Vec4) {
+    pub fn add(&mut self, other: &Vec4) {
         self.x += other.x;
         self.y += other.y;
         self.z += other.z;
         self.w += other.w;
     }
-    pub fn sub(&mut self, other: Vec4) {
+    pub fn sub(&mut self, other: &Vec4) {
         self.x -= other.x;
         self.y -= other.y;
         self.z -= other.z;
         self.w -= other.w;
     }
-    pub fn mul(&mut self, other: Vec4) {
+    pub fn mul(&mut self, other: &Vec4) {
         self.x *= other.x;
         self.y *= other.y;
         self.z *= other.z;
         self.w *= other.w;
     }
-    pub fn dot(&self, other: Vec4) -> f64 {
+    pub fn dot(&self, other: &Vec4) -> f64 {
         return self.x * other.x + self.y * other.y;
     }
     #[wasm_bindgen(js_name = lengthSq)]
@@ -68,16 +68,16 @@ impl Vec4 {
         self.z = z;
         self.w = w;
     }
-    pub fn copy(&mut self, v: Vec4) {
+    pub fn copy(&mut self, v: &Vec4) {
         self.set(v.x, v.y, v.z, v.w);
     }
     pub fn clone(&self) -> Self {
         return Vec4::new(self.x, self.y, self.z, self.w);
     }
-    pub fn equals(&self, other: Vec4) -> bool {
+    pub fn equals(&self, other: &Vec4) -> bool {
         return self.x == other.x && self.y == other.y && self.z == other.z && self.w == other.w;
     }
-    pub fn lerp(&mut self, l: Vec4, r: Vec4, alpha: f64) {
+    pub fn lerp(&mut self, l: &Vec4, r: &Vec4, alpha: f64) {
         self.x = l.x + alpha * (r.x - l.x);
         self.y = l.y + alpha * (r.y - l.y);
         self.z = l.z + alpha * (r.z - l.z);

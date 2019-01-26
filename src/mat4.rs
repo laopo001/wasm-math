@@ -86,8 +86,8 @@ impl Mat4 {
         r[14] = n14;
         r[15] = n15;
     }
-    pub fn copy(&mut self, v: Mat4) {
-        let data = v.data;
+    pub fn copy(&mut self, v: &Mat4) {
+        let data = v.data.as_slice();
         let n0 = data[0];
         let n1 = data[1];
         let n2 = data[2];
@@ -126,7 +126,7 @@ impl Mat4 {
         let n15 = data[15];
         return Mat4::new(n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15);
     }
-    pub fn equals(&self, other: Mat4) -> bool {
+    pub fn equals(&self, other: &Mat4) -> bool {
         let r = self.data();
         let a = other.data();
         return r[0] == a[0] &&
@@ -347,7 +347,7 @@ fn mat4_mut() {
     let mut mat1 = Mat4::get_identity();
     let mat2 = Mat4::get_identity();
     mat1.mul(&mat2);
-    assert_eq!(mat1.equals(mat2), true);
+    assert_eq!(mat1.equals(&mat2), true);
 }
 
 #[test]
@@ -355,5 +355,5 @@ fn mat4_invert() {
     let mut mat1 = Mat4::get_identity();
     let mat2 = Mat4::get_identity();
     mat1.invert();
-    assert_eq!(mat1.equals(mat2), true);
+    assert_eq!(mat1.equals(&mat2), true);
 }
