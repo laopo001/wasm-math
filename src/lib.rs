@@ -3,6 +3,7 @@ use cfg_if::cfg_if;
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
+pub mod math;
 pub mod mat4;
 pub mod vec2;
 pub mod vec3;

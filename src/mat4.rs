@@ -5,7 +5,9 @@ use wasm_bindgen::prelude::*;
 use std::rc::Rc;
 use std::cell::RefCell;
 
-use crate::vec4;
+use crate::vec3::Vec3;
+use crate::vec4::Vec4;
+use crate::math::DEG_TO_RAD;
 
 #[wasm_bindgen]
 extern "C" {
@@ -15,7 +17,7 @@ extern "C" {
 
 #[wasm_bindgen]
 pub struct Mat4 {
-    data:Vec<f64>,
+    data: Vec<f64>,
 }
 
 #[wasm_bindgen]
@@ -153,12 +155,88 @@ impl Mat4 {
         m[13] = y;
         m[14] = z;
     }
+    #[wasm_bindgen(js_name = getTranslate)]
+    pub fn get_translate(&self, v: &mut Vec3) {
+        let m = self.data.as_slice();
+        v.set(m[12], m[13], m[14]);
+    }
+    #[wasm_bindgen(js_name = transformPoint)]
+    pub fn transform_point(&self, vec: &Vec3, res: &mut Vec3) {
+        let m = self.data.as_slice();
+        let v = vec.data();
+        let x = v[0] * m[0] +
+            v[1] * m[4] +
+            v[2] * m[8] +
+            m[12];
+        let y = v[0] * m[1] +
+            v[1] * m[5] +
+            v[2] * m[9] +
+            m[13];
+        let z = v[0] * m[2] +
+            v[1] * m[6] +
+            v[2] * m[10] +
+            m[14];
+        res.set(x, y, z);
+    }
+    #[wasm_bindgen(js_name = setFromAxisAngle)]
+    pub fn set_from_axis_angle(&mut self, axis: &Vec3, angle: f64) {
+        let m = self.data.as_mut_slice();
+        let angle = angle * DEG_TO_RAD;
+        let x = axis.x;
+        let y = axis.y;
+        let z = axis.z;
+        let cos = angle.cos();
+        let sin = angle.sin();
+        let t = 1.0 - cos;
+        let tx = t * x;
+        let ty = t * y;
+        m[0] = tx * x + cos;
+        m[1] = tx * y + sin * z;
+        m[2] = tx * z - sin * y;
+        m[3] = 0.0;
+        m[4] = tx * y - sin * z;
+        m[5] = ty * y + cos;
+        m[6] = ty * z + sin * x;
+        m[7] = 0.0;
+        m[8] = tx * z + sin * y;
+        m[9] = ty * z - x * sin;
+        m[10] = t * z * z + cos;
+        m[11] = 0.0;
+        m[12] = 0.0;
+        m[13] = 0.0;
+        m[14] = 0.0;
+        m[15] = 1.0;
+    }
     #[wasm_bindgen(js_name = setScale)]
     pub fn set_scale(&mut self, x: f64, y: f64, z: f64) {
         let m = self.data.as_mut_slice();
         m[0] = x;
         m[5] = y;
         m[10] = z;
+    }
+    pub fn get_scale(&self, v: &mut Vec3) {
+        let mut temp1 = Vec3::default();
+        let mut temp2 = Vec3::default();
+        let mut temp3 = Vec3::default();
+        self.get_x(&mut temp1);
+        self.get_y(&mut temp2);
+        self.get_z(&mut temp3);
+        v.set(temp1.length(), temp2.length(), temp3.length());
+    }
+    #[wasm_bindgen(js_name = getX)]
+    pub fn get_x(&self, v: &mut Vec3) {
+        let m = self.data.as_slice();
+        v.set(m[0], m[1], m[2]);
+    }
+    #[wasm_bindgen(js_name = getY)]
+    pub fn get_y(&self, v: &mut Vec3) {
+        let m = self.data.as_slice();
+        v.set(m[4], m[5], m[6]);
+    }
+    #[wasm_bindgen(js_name = getZ)]
+    pub fn get_z(&self, v: &mut Vec3) {
+        let m = self.data.as_slice();
+        v.set(m[8], m[9], m[10]);
     }
     #[wasm_bindgen(js_name = setIdentity)]
     pub fn set_identity(&mut self) {
@@ -298,7 +376,9 @@ impl Mat4 {
         let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
         if det == 0.0 {
             // #ifdef DEBUG
-            warn("Can't invert matrix, determinant is 0");
+            unsafe {
+                warn("Can't invert matrix, determinant is 0");
+            }
             // #endif
             self.set_identity();
         } else {
@@ -356,4 +436,13 @@ fn mat4_invert() {
     let mat2 = Mat4::get_identity();
     mat1.invert();
     assert_eq!(mat1.equals(&mat2), true);
+}
+
+#[test]
+fn mat4_set_scale_get_scale() {
+    let mut mat1 = Mat4::get_identity();
+    mat1.set_scale(3.0, 4.0, 5.0);
+    let mut v = Vec3::default();
+    mat1.get_scale(&mut v);
+    assert!(v.equals(&mut Vec3::new(3.0, 4.0, 5.0)));
 }

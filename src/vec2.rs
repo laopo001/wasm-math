@@ -67,6 +67,9 @@ impl Vec2 {
         self.x = l.x + alpha * (r.x - l.x);
         self.y = l.y + alpha * (r.y - l.y);
     }
+    pub fn default() -> Self {
+        Vec2::new(0.0, 0.0)
+    }
 }
 
 #[test]

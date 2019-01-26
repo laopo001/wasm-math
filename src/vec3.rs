@@ -80,6 +80,9 @@ impl Vec3 {
         self.y = l.y + alpha * (r.y - l.y);
         self.z = l.z + alpha * (r.z - l.z);
     }
+    pub fn default() -> Self {
+        Vec3::new(0.0, 0.0, 0.0)
+    }
 }
 
 // impl Clone for Vec3 {

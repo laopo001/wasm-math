@@ -83,4 +83,7 @@ impl Vec4 {
         self.z = l.z + alpha * (r.z - l.z);
         self.w = l.w + alpha * (r.w - l.w);
     }
+    pub fn default() -> Self {
+        Vec4::new(0.0, 0.0, 0.0,1.0)
+    }
 }
