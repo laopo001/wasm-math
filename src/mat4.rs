@@ -1,14 +1,10 @@
 #[warn(dead_code)]
 extern crate wasm_bindgen;
-
-use std::cell::RefCell;
-use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 
 use crate::math::DEG_TO_RAD;
 use crate::quat::Quat;
 use crate::vec3::Vec3;
-use crate::vec4::Vec4;
 
 #[wasm_bindgen]
 extern "C" {
@@ -50,7 +46,7 @@ impl Mat4 {
     }
     pub fn add(&mut self, other: &Mat4) {
         let a = other.data.as_slice();
-        let mut r = self.data.as_mut_slice();
+        let r = self.data.as_mut_slice();
         r[0] += a[0];
         r[1] += a[1];
         r[2] += a[2];
@@ -438,29 +434,27 @@ impl Mat4 {
         let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
         if det == 0.0 {
             // #ifdef DEBUG
-            unsafe {
-                warn("Can't invert matrix, determinant is 0");
-            }
+            warn("Can't invert matrix, determinant is 0");
             // #endif
             self.set_identity();
         } else {
-            let invDet = 1.0 / det;
-            m[0] = (a11 * b11 - a12 * b10 + a13 * b09) * invDet;
-            m[1] = (-a01 * b11 + a02 * b10 - a03 * b09) * invDet;
-            m[2] = (a31 * b05 - a32 * b04 + a33 * b03) * invDet;
-            m[3] = (-a21 * b05 + a22 * b04 - a23 * b03) * invDet;
-            m[4] = (-a10 * b11 + a12 * b08 - a13 * b07) * invDet;
-            m[5] = (a00 * b11 - a02 * b08 + a03 * b07) * invDet;
-            m[6] = (-a30 * b05 + a32 * b02 - a33 * b01) * invDet;
-            m[7] = (a20 * b05 - a22 * b02 + a23 * b01) * invDet;
-            m[8] = (a10 * b10 - a11 * b08 + a13 * b06) * invDet;
-            m[9] = (-a00 * b10 + a01 * b08 - a03 * b06) * invDet;
-            m[10] = (a30 * b04 - a31 * b02 + a33 * b00) * invDet;
-            m[11] = (-a20 * b04 + a21 * b02 - a23 * b00) * invDet;
-            m[12] = (-a10 * b09 + a11 * b07 - a12 * b06) * invDet;
-            m[13] = (a00 * b09 - a01 * b07 + a02 * b06) * invDet;
-            m[14] = (-a30 * b03 + a31 * b01 - a32 * b00) * invDet;
-            m[15] = (a20 * b03 - a21 * b01 + a22 * b00) * invDet;
+            let inv_det = 1.0 / det;
+            m[0] = (a11 * b11 - a12 * b10 + a13 * b09) * inv_det;
+            m[1] = (-a01 * b11 + a02 * b10 - a03 * b09) * inv_det;
+            m[2] = (a31 * b05 - a32 * b04 + a33 * b03) * inv_det;
+            m[3] = (-a21 * b05 + a22 * b04 - a23 * b03) * inv_det;
+            m[4] = (-a10 * b11 + a12 * b08 - a13 * b07) * inv_det;
+            m[5] = (a00 * b11 - a02 * b08 + a03 * b07) * inv_det;
+            m[6] = (-a30 * b05 + a32 * b02 - a33 * b01) * inv_det;
+            m[7] = (a20 * b05 - a22 * b02 + a23 * b01) * inv_det;
+            m[8] = (a10 * b10 - a11 * b08 + a13 * b06) * inv_det;
+            m[9] = (-a00 * b10 + a01 * b08 - a03 * b06) * inv_det;
+            m[10] = (a30 * b04 - a31 * b02 + a33 * b00) * inv_det;
+            m[11] = (-a20 * b04 + a21 * b02 - a23 * b00) * inv_det;
+            m[12] = (-a10 * b09 + a11 * b07 - a12 * b06) * inv_det;
+            m[13] = (a00 * b09 - a01 * b07 + a02 * b06) * inv_det;
+            m[14] = (-a30 * b03 + a31 * b01 - a32 * b00) * inv_det;
+            m[15] = (a20 * b03 - a21 * b01 + a22 * b00) * inv_det;
         }
     }
     pub fn get_identity() -> Self {

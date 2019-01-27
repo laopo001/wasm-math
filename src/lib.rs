@@ -6,12 +6,13 @@ extern crate wasm_bindgen;
 
 use wasm_bindgen::prelude::*;
 
-pub mod math;
+pub mod mat3;
 pub mod mat4;
+pub mod math;
+pub mod quat;
 pub mod vec2;
 pub mod vec3;
 pub mod vec4;
-pub mod quat;
 // pub use self::vec2::Vec2;
 
 #[wasm_bindgen]
@@ -21,11 +22,10 @@ extern "C" {
 }
 
 cfg_if! {
-        if #[cfg(feature = "web")] {
-            #[wasm_bindgen(start)]
-            pub fn main() {
-                log("wasm-math loaded");
-            }
+    if #[cfg(feature = "web")] {
+        #[wasm_bindgen(start)]
+        pub fn main() {
+            log("wasm-math loaded");
         }
     }
-
+}

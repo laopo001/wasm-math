@@ -3,9 +3,9 @@ extern crate wasm_bindgen;
 
 use wasm_bindgen::prelude::*;
 
-use crate::vec3::Vec3;
-use crate::math::DEG_TO_RAD;
 use crate::mat4::Mat4;
+use crate::math::DEG_TO_RAD;
+use crate::vec3::Vec3;
 
 #[wasm_bindgen]
 pub struct Quat {
@@ -75,16 +75,18 @@ impl Quat {
         self.z = q1w * q2z + q1z * q2w + q1x * q2y - q1y * q2x;
         self.w = q1w * q2w - q1x * q2x - q1y * q2y - q1z * q2z;
     }
-    pub fn setFromAxisAngle(&mut self, axis: &Vec3, angle: f64) {
-        let angleRad = angle * 0.5 * DEG_TO_RAD;
-        let sa = angleRad.sin();
-        let ca = angleRad.cos();
-        self.x = sa * self.x;
-        self.y = sa * self.y;
-        self.z = sa * self.z;
+    #[wasm_bindgen(js_name = setFromAxisAngle)]
+    pub fn set_from_axis_angle(&mut self, axis: &Vec3, angle: f64) {
+        let angle_rad = angle * 0.5 * DEG_TO_RAD;
+        let sa = angle_rad.sin();
+        let ca = angle_rad.cos();
+        self.x = sa * axis.x;
+        self.y = sa * axis.y;
+        self.z = sa * axis.z;
         self.w = ca;
     }
-    pub fn setFromEulerAngles(&mut self, ex: f64, ey: f64, ez: f64) {
+    #[wasm_bindgen(js_name = setFromEulerAngles)]
+    pub fn set_from_euler_angles(&mut self, ex: f64, ey: f64, ez: f64) {
         let hald = 0.5 * DEG_TO_RAD;
 
         let ex = ex * hald;
@@ -103,8 +105,8 @@ impl Quat {
         self.z = cx * cy * sz - sx * sy * cz;
         self.w = cx * cy * cz + sx * sy * sz;
     }
-    pub fn setFromMat4(&mut self, mat: &Mat4) {
-        let imm_p_m: *const Mat4 = mat as *const Mat4;
+    #[wasm_bindgen(js_name = setFromMat4)]
+    pub fn set_from_mat4(&mut self, mat: &Mat4) {
         let m = mat.data.as_slice();
 
         let mut m00 = m[0];
@@ -183,7 +185,8 @@ impl Quat {
             }
         }
     }
-    pub fn transformVector(&self, vec: &Vec3, res: &mut Vec3) {
+    #[wasm_bindgen(js_name = transformVector)]
+    pub fn transform_vector(&self, vec: &Vec3, res: &mut Vec3) {
         let x = vec.x;
         let y = vec.y;
         let z = vec.z;
@@ -210,18 +213,18 @@ impl Quat {
         let mut rw = rhs.w;
 
         // Calculate angle between them.
-        let mut cosHalfTheta = lw * rw + lx * rx + ly * ry + lz * rz;
+        let mut cos_half_theta = lw * rw + lx * rx + ly * ry + lz * rz;
 
-        if (cosHalfTheta < 0.0) {
+        if cos_half_theta < 0.0 {
             rw = -rw;
             rx = -rx;
             ry = -ry;
             rz = -rz;
-            cosHalfTheta = -cosHalfTheta;
+            cos_half_theta = -cos_half_theta;
         }
 
         // If lhs == rhs or lhs == -rhs then theta == 0 and we can return lhs
-        if cosHalfTheta.abs() >= 1.0 {
+        if cos_half_theta.abs() >= 1.0 {
             self.w = lw;
             self.x = lx;
             self.y = ly;
@@ -229,26 +232,26 @@ impl Quat {
         }
 
         // Calculate temporary values.
-        let halfTheta = cosHalfTheta.acos();
-        let sinHalfTheta = (1.0 - cosHalfTheta * cosHalfTheta).sqrt();
+        let half_theta = cos_half_theta.acos();
+        let sin_half_theta = (1.0 - cos_half_theta * cos_half_theta).sqrt();
 
         // If theta = 180 degrees then result is not fully defined
         // we could rotate around any axis normal to qa or qb
-        if sinHalfTheta.abs() < 0.001 {
-            self.w = (lw * 0.5 + rw * 0.5);
-            self.x = (lx * 0.5 + rx * 0.5);
-            self.y = (ly * 0.5 + ry * 0.5);
-            self.z = (lz * 0.5 + rz * 0.5);
+        if sin_half_theta.abs() < 0.001 {
+            self.w = lw * 0.5 + rw * 0.5;
+            self.x = lx * 0.5 + rx * 0.5;
+            self.y = ly * 0.5 + ry * 0.5;
+            self.z = lz * 0.5 + rz * 0.5;
         }
 
-        let ratioA = ((1.0 - alpha) * halfTheta).sin() / sinHalfTheta;
-        let ratioB = (alpha * halfTheta).sin() / sinHalfTheta;
+        let ratio_a = ((1.0 - alpha) * half_theta).sin() / sin_half_theta;
+        let ratio_b = (alpha * half_theta).sin() / sin_half_theta;
 
         // Calculate Quaternion.
-        self.w = (lw * ratioA + rw * ratioB);
-        self.x = (lx * ratioA + rx * ratioB);
-        self.y = (ly * ratioA + ry * ratioB);
-        self.z = (lz * ratioA + rz * ratioB);
+        self.w = lw * ratio_a + rw * ratio_b;
+        self.x = lx * ratio_a + rx * ratio_b;
+        self.y = ly * ratio_a + ry * ratio_b;
+        self.z = lz * ratio_a + rz * ratio_b;
     }
     pub fn default() -> Self {
         Quat::new(0.0, 0.0, 0.0, 1.0)
