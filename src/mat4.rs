@@ -1,14 +1,14 @@
 #[warn(dead_code)]
 extern crate wasm_bindgen;
 
-use wasm_bindgen::prelude::*;
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
+use wasm_bindgen::prelude::*;
 
+use crate::math::DEG_TO_RAD;
+use crate::quat::Quat;
 use crate::vec3::Vec3;
 use crate::vec4::Vec4;
-use crate::quat::Quat;
-use crate::math::DEG_TO_RAD;
 
 #[wasm_bindgen]
 extern "C" {
@@ -42,7 +42,11 @@ impl Mat4 {
         n14: f64,
         n15: f64,
     ) -> Self {
-        return Mat4 { data: vec![n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15] };
+        return Mat4 {
+            data: vec![
+                n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15,
+            ],
+        };
     }
     pub fn add(&mut self, other: &Mat4) {
         let a = other.data.as_slice();
@@ -67,10 +71,25 @@ impl Mat4 {
     pub fn data(&self) -> Box<[f64]> {
         self.data.clone().into_boxed_slice()
     }
-    pub fn set(&mut self, n0: f64, n1: f64, n2: f64, n3: f64,
-               n4: f64, n5: f64, n6: f64, n7: f64,
-               n8: f64, n9: f64, n10: f64, n11: f64,
-               n12: f64, n13: f64, n14: f64, n15: f64) {
+    pub fn set(
+        &mut self,
+        n0: f64,
+        n1: f64,
+        n2: f64,
+        n3: f64,
+        n4: f64,
+        n5: f64,
+        n6: f64,
+        n7: f64,
+        n8: f64,
+        n9: f64,
+        n10: f64,
+        n11: f64,
+        n12: f64,
+        n13: f64,
+        n14: f64,
+        n15: f64,
+    ) {
         let r = self.data.as_mut_slice();
         r[0] = n0;
         r[1] = n1;
@@ -107,7 +126,9 @@ impl Mat4 {
         let n13 = data[13];
         let n14 = data[14];
         let n15 = data[15];
-        self.set(n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15);
+        self.set(
+            n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15,
+        );
     }
     pub fn clone(&self) -> Self {
         let data = self.data.as_slice();
@@ -127,27 +148,29 @@ impl Mat4 {
         let n13 = data[13];
         let n14 = data[14];
         let n15 = data[15];
-        return Mat4::new(n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15);
+        return Mat4::new(
+            n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15,
+        );
     }
     pub fn equals(&self, other: &Mat4) -> bool {
         let r = self.data();
         let a = other.data();
-        return r[0] == a[0] &&
-            r[1] == a[1] &&
-            r[2] == a[2] &&
-            r[3] == a[3] &&
-            r[4] == a[4] &&
-            r[5] == a[5] &&
-            r[6] == a[6] &&
-            r[7] == a[7] &&
-            r[8] == a[8] &&
-            r[9] == a[9] &&
-            r[10] == a[10] &&
-            r[11] == a[11] &&
-            r[12] == a[12] &&
-            r[13] == a[13] &&
-            r[14] == a[14] &&
-            r[15] == a[15];
+        return r[0] == a[0]
+            && r[1] == a[1]
+            && r[2] == a[2]
+            && r[3] == a[3]
+            && r[4] == a[4]
+            && r[5] == a[5]
+            && r[6] == a[6]
+            && r[7] == a[7]
+            && r[8] == a[8]
+            && r[9] == a[9]
+            && r[10] == a[10]
+            && r[11] == a[11]
+            && r[12] == a[12]
+            && r[13] == a[13]
+            && r[14] == a[14]
+            && r[15] == a[15];
     }
     #[wasm_bindgen(js_name = setTranslate)]
     pub fn set_translate(&mut self, x: f64, y: f64, z: f64) {
@@ -165,18 +188,9 @@ impl Mat4 {
     pub fn transform_point(&self, vec: &Vec3, res: &mut Vec3) {
         let m = self.data.as_slice();
         let v = vec.data();
-        let x = v[0] * m[0] +
-            v[1] * m[4] +
-            v[2] * m[8] +
-            m[12];
-        let y = v[0] * m[1] +
-            v[1] * m[5] +
-            v[2] * m[9] +
-            m[13];
-        let z = v[0] * m[2] +
-            v[1] * m[6] +
-            v[2] * m[10] +
-            m[14];
+        let x = v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + m[12];
+        let y = v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + m[13];
+        let z = v[0] * m[2] + v[1] * m[6] + v[2] * m[10] + m[14];
         res.set(x, y, z);
     }
     #[wasm_bindgen(js_name = setFromAxisAngle)]
@@ -210,7 +224,51 @@ impl Mat4 {
     }
     #[wasm_bindgen(js_name = setFromTRS)]
     pub fn set_from_trs(&mut self, t: &Vec3, r: &Quat, s: &Vec3) {
+        let tx = t.x;
+        let ty = t.y;
+        let tz = t.z;
 
+        let qx = r.x;
+        let qy = r.y;
+        let qz = r.z;
+        let qw = r.w;
+
+        let sx = s.x;
+        let sy = s.y;
+        let sz = s.z;
+
+        let x2 = qx + qx;
+        let y2 = qy + qy;
+        let z2 = qz + qz;
+        let xx = qx * x2;
+        let xy = qx * y2;
+        let xz = qx * z2;
+        let yy = qy * y2;
+        let yz = qy * z2;
+        let zz = qz * z2;
+        let wx = qw * x2;
+        let wy = qw * y2;
+        let wz = qw * z2;
+        let m = self.data.as_mut_slice();
+        m[0] = (1.0 - (yy + zz)) * sx;
+        m[1] = (xy + wz) * sx;
+        m[2] = (xz - wy) * sx;
+        m[3] = 0.0;
+
+        m[4] = (xy - wz) * sy;
+        m[5] = (1.0 - (xx + zz)) * sy;
+        m[6] = (yz + wx) * sy;
+        m[7] = 0.0;
+
+        m[8] = (xz + wy) * sz;
+        m[9] = (yz - wx) * sz;
+        m[10] = (1.0 - (xx + yy)) * sz;
+        m[11] = 0.0;
+
+        m[12] = tx;
+        m[13] = ty;
+        m[14] = tz;
+        m[15] = 1.0;
     }
     #[wasm_bindgen(js_name = setScale)]
     pub fn set_scale(&mut self, x: f64, y: f64, z: f64) {
@@ -291,7 +349,6 @@ impl Mat4 {
         m[14] = tmp;
     }
     pub fn mul(&mut self, other: &Mat4) {
-        let mut tmp: f64;
         let m = self.data.as_mut_slice();
         let a00 = m[0];
         let a01 = m[1];
@@ -407,10 +464,9 @@ impl Mat4 {
         }
     }
     pub fn get_identity() -> Self {
-        Mat4::new(1.0, 0.0, 0.0, 0.0,
-                  0.0, 1.0, 0.0, 0.0,
-                  0.0, 0.0, 1.0, 0.0,
-                  0.0, 0.0, 0.0, 1.0)
+        Mat4::new(
+            1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
+        )
     }
 }
 
@@ -425,7 +481,6 @@ fn mat4_add() {
     mat1.add(&mat2);
     assert_eq!(mat2.data[0], 1.0);
 }
-
 
 #[test]
 fn mat4_mut() {
