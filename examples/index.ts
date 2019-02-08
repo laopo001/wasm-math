@@ -5,26 +5,26 @@
  * @author: liaodh
  * @summary: short description for the file
  * -----
- * Last Modified: Thursday, January 24th 2019, 5:48:46 pm
+ * Last Modified: Friday, February 8th 2019, 10:18:31 pm
  * Modified By: liaodh
  * -----
  * Copyright (c) 2018 jiguang
  */
 
-import { Vec2, Mat4 } from '../pkg/wasm_math.js';
+import { Vec2, Mat4, Matrix } from '../pkg/wasm_math.js';
 
 let vec2 = new Vec2(0, 0);
 let data = vec2.data();
 console.log(data)
-data[0]=1;
-console.log(vec2,data,vec2.data())
+data[0] = 1;
+console.log(vec2, data, vec2.data())
 
-let m =  Mat4.get_identity();
+let m = Mat4.get_identity();
 let m2 = Mat4.get_identity();
 m.invert()
 
 console.log(
-    m.data(),m2.data(), m.equals(m2)
+    m.data(), m2.data(), m.equals(m2)
 )
 console.dir(Mat4)
 
@@ -36,3 +36,9 @@ for (let i = 0; i < 100000; i++) {
 }
 console.timeEnd('1')
 console.timeStamp()
+
+console.log('---------------------------')
+
+let m1 = new Matrix(0, 0, 0);
+console.log(m1.data());
+
