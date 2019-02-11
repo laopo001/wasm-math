@@ -5,7 +5,7 @@
  * @author: liaodh
  * @summary: short description for the file
  * -----
- * Last Modified: Friday, February 8th 2019, 10:18:31 pm
+ * Last Modified: Saturday, February 9th 2019, 12:31:52 am
  * Modified By: liaodh
  * -----
  * Copyright (c) 2018 jiguang
@@ -40,5 +40,8 @@ console.timeStamp()
 console.log('---------------------------')
 
 let m1 = new Matrix(0, 0, 0);
-console.log(m1.data());
+let d = m1.data();
+console.log(d);
+d[0] = 1;
+console.log(d,m1.data());
 
