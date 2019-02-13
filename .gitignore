@@ -7,3 +7,4 @@ build/*.map
 build/*.wasm
 .cache-loader/
 .idea/
+yarn-error.log
