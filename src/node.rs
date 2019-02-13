@@ -22,7 +22,6 @@ trait QRC<T: ?Sized> {
     fn get_mut(&mut self);
 }
 
-
 #[wasm_bindgen]
 impl Node {
     pub fn new() -> Node {
@@ -58,7 +57,8 @@ impl Node {
 fn test() {
     let mut node = Node::new_rc();
     let node2 = Node::new_rc();
-    (*node).local_position = Vec3::new(1.0, 1.0, 1.0);
+    Rc::get_mut(&mut node).unwrap().local_position = Vec3::new(1.0, 1.0, 1.0);
+    // (*node).local_position = Vec3::new(1.0, 1.0, 1.0);
     // node.add_child2(node2.clone());
     Node::add_child(node.clone(), node2.clone());
     // // let children = node.children.borrow();
