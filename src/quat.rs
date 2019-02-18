@@ -8,6 +8,7 @@ use crate::math::DEG_TO_RAD;
 use crate::vec3::Vec3;
 
 #[wasm_bindgen]
+#[derive(Clone)]
 pub struct Quat {
     pub x: f64,
     pub y: f64,

@@ -13,6 +13,7 @@ extern "C" {
 }
 
 #[wasm_bindgen]
+#[derive(Clone)]
 pub struct Mat4 {
     pub(crate) data: Vec<f64>,
 }

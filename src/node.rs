@@ -9,17 +9,14 @@ use std::cell::RefCell;
 use std::rc::{Rc, Weak};
 
 #[wasm_bindgen]
+#[derive(Clone)]
 pub struct Node {
     local_position: Vec3,
     local_rotation: Quat,
     local_scale: Vec3,
     local_transform: Mat4,
-    parent: RefCell<Weak<Node>>,
-    children: RefCell<Vec<Rc<Node>>>,
-}
-
-trait QRC<T: ?Sized> {
-    fn get_mut(&mut self);
+    pub(crate) parent: *mut Node,
+    pub(crate) children: Vec<*mut Node>,
 }
 
 #[wasm_bindgen]
@@ -30,41 +27,30 @@ impl Node {
             local_rotation: Quat::default(),
             local_scale: Vec3::default(),
             local_transform: Mat4::get_identity(),
-            parent: RefCell::new(Weak::new()),
-            children: RefCell::new(vec![]),
+            parent: std::ptr::null_mut(),
+            children: vec![],
         };
     }
-    pub fn new_rc() -> Rc<Node> {
-        return Rc::new(Node::new());
-    }
-    pub fn add_child2(&self, child: Rc<Node>) {
-        // *child.parent.borrow_mut() = Rc::downgrade(&Rc::new(*self));
-        self.children.borrow_mut().push(child);
-    }
-    pub fn add_child(node: Rc<Node>, child: Rc<Node>) {
-        *child.parent.borrow_mut() = Rc::downgrade(&node);
-        node.children.borrow_mut().push(child);
-    }
-    fn get_mut() {
-        // *Rc::get_mut(&mut node).unwrap()
-    }
-    // pub fn into_rc_refcell(){
-    //     return
+    // pub fn new_rc() -> Rc<Node> {
+    //     return Rc::new(Node::new());
     // }
+    pub fn add_child(&mut self, child: &mut Node) {
+        child.parent = child;
+        self.children.push(child);
+    }
 }
 
 #[test]
 fn test() {
-    let mut node = Node::new_rc();
-    let node2 = Node::new_rc();
-    Rc::get_mut(&mut node).unwrap().local_position = Vec3::new(1.0, 1.0, 1.0);
-    // (*node).local_position = Vec3::new(1.0, 1.0, 1.0);
-    // node.add_child2(node2.clone());
-    Node::add_child(node.clone(), node2.clone());
-    // // let children = node.children.borrow();
-    // assert_eq!(
-    //     node.children.borrow()[0].local_position.data(),
-    //     Vec3::default().data()
-    // );
-    assert_eq!(node.local_position.data(), Vec3::default().data());
+    let mut node = Node::new();
+    let mut node2 = Node::new();
+    node.add_child(&mut node2);
+    node.local_position = Vec3::new(1.0, 1.0, 1.0);
+
+    unsafe {
+        assert_eq!(
+            (*node.children[0]).local_position.data(),
+            Vec3::default().data()
+        );
+    }
 }
