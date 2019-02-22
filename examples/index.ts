@@ -5,13 +5,13 @@
  * @author: liaodh
  * @summary: short description for the file
  * -----
- * Last Modified: Saturday, February 9th 2019, 12:31:52 am
+ * Last Modified: Friday, February 22nd 2019, 6:58:06 pm
  * Modified By: liaodh
  * -----
  * Copyright (c) 2018 jiguang
  */
 
-import { Vec2, Mat4, Matrix } from '../pkg/wasm_math.js';
+import { Vec2, Mat4, Matrix, Node } from '../pkg/wasm_math.js';
 
 let vec2 = new Vec2(0, 0);
 let data = vec2.data();
@@ -39,9 +39,9 @@ console.timeStamp()
 
 console.log('---------------------------')
 
-let m1 = new Matrix(0, 0, 0);
-let d = m1.data();
-console.log(d);
-d[0] = 1;
-console.log(d,m1.data());
 
+let node = new Node();
+let node2 = new Node();
+node.add_child(node2);
+
+console.log(node.get_child(0));

@@ -6,14 +6,15 @@ use crate::mat4::Mat4;
 use crate::quat::Quat;
 use crate::vec3::Vec3;
 use std::cell::RefCell;
+use std::ops::Deref;
 use std::rc::{Rc, Weak};
 
 #[wasm_bindgen]
 #[derive(Clone)]
 pub struct Node {
-    local_position: Vec3,
-    local_rotation: Quat,
-    local_scale: Vec3,
+    pub local_position: Vec3,
+    pub local_rotation: Quat,
+    pub local_scale: Vec3,
     local_transform: Mat4,
     pub(crate) parent: *mut Node,
     pub(crate) children: Vec<*mut Node>,
@@ -21,6 +22,7 @@ pub struct Node {
 
 #[wasm_bindgen]
 impl Node {
+    #[wasm_bindgen(constructor)]
     pub fn new() -> Node {
         return Node {
             local_position: Vec3::default(),
@@ -38,7 +40,17 @@ impl Node {
         child.parent = child;
         self.children.push(child);
     }
+    pub fn get_parent(&self) -> *const Node {
+        return self.parent;
+    }
+    pub fn get_mut_parent(&mut self) -> *mut Node {
+        return self.parent;
+    }
+    pub fn get_child(&self, index: usize) -> *const Node {
+        return self.children[index];
+    }
 }
+
 
 #[test]
 fn test() {

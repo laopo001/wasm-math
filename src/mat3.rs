@@ -9,6 +9,7 @@ pub struct Mat3 {
 
 #[wasm_bindgen]
 impl Mat3 {
+    #[wasm_bindgen(constructor)]
     pub fn new(
         n0: f64,
         n1: f64,
