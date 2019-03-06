@@ -9,6 +9,11 @@ use std::cell::RefCell;
 use std::ops::Deref;
 use std::rc::{Rc, Weak};
 
+#[wasm_bindgen(typescript_custom_section)]
+const TS_APPEND_CONTENT: &'static str = r#"
+export type Coords = { "latitude": number, "longitude": number, }; 
+"#;
+
 #[wasm_bindgen]
 #[derive(Clone)]
 pub struct Node {
@@ -40,17 +45,16 @@ impl Node {
         child.parent = child;
         self.children.push(child);
     }
-    pub fn get_parent(&self) -> *const Node {
+    pub fn get_parent_ptr(&self) -> *const Node {
         return self.parent;
     }
-    pub fn get_mut_parent(&mut self) -> *mut Node {
+    pub fn get_mut_parent_ptr(&mut self) -> *mut Node {
         return self.parent;
     }
-    pub fn get_child(&self, index: usize) -> *const Node {
+    pub fn get_child_ptr(&self, index: usize) -> *const Node {
         return self.children[index];
     }
 }
-
 
 #[test]
 fn test() {

@@ -59,13 +59,13 @@ module.exports = function (env, webpackConfig) {
         resolve: {
             extensions: ['.ts', '.tsx', '.js', '.wasm'],
             alias: {
-                'wasm':  path.resolve(__dirname, `./wasm/pkg/wasm`),
+                'wasm': path.resolve(__dirname, `./wasm/pkg/wasm`),
             }
         },
         externals: {
 
         },
-        devtool: 'source-map',
+        // devtool: 'source-map',
         mode: 'development',
         performance: { hints: false },
         devServer: {
