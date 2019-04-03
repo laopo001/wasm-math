@@ -108,7 +108,7 @@ impl Quat {
     }
     #[wasm_bindgen(js_name = setFromMat4)]
     pub fn set_from_mat4(&mut self, mat: &Mat4) {
-        let m = mat.data.as_slice();
+        let m = mat.data;
 
         let mut m00 = m[0];
         let mut m01 = m[1];
