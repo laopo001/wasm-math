@@ -5,7 +5,7 @@
  * @author: liaodh
  * @summary: short description for the file
  * -----
- * Last Modified: Thursday, April 4th 2019, 1:26:31 am
+ * Last Modified: Thursday, April 4th 2019, 1:41:30 am
  * Modified By: liaodh
  * -----
  * Copyright (c) 2018 jiguang
@@ -28,8 +28,7 @@ console.log(v.data());
 
 let node = new Node();
 console.error(node.local_position);
-// node.local_position.set(155, 155, 155);
-console.error(node.local_position);
+node.local_position.set(155, 155, 155);
 console.error(node.local_position);
 // let node2 = new Node();
 // node.add_child(node2);

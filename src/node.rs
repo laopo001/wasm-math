@@ -34,7 +34,7 @@ impl Node {
         };
     }
     pub fn add_child(&mut self, child: &mut Node) {
-        child.parent = child;
+        child.parent = self;
         self.children.push(child);
     }
     pub fn get_parent(&self) -> *mut Node {
@@ -48,14 +48,8 @@ impl Node {
 #[test]
 fn test() {
     let mut node = Node::new();
-    let mut node2 = Node::new();
-    node.add_child(&mut node2);
-    node.local_position = Vec3::new(1.0, 1.0, 1.0);
-
+    node.local_position.set(1.0, 2.0, 3.0);
     unsafe {
-        assert_eq!(
-            (*node.children[0]).local_position.data(),
-            Vec3::default().data()
-        );
+        assert_eq!(node.local_position.data(), Vec3::new(1.0, 2.0, 3.0).data());
     }
 }
