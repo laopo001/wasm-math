@@ -4,7 +4,7 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub struct Mat3 {
-    pub(crate) data: Vec<f64>,
+    pub(crate) data: [f64; 9],
 }
 
 #[wasm_bindgen]
@@ -22,11 +22,11 @@ impl Mat3 {
         n8: f64,
     ) -> Self {
         return Mat3 {
-            data: vec![n0, n1, n2, n3, n4, n5, n6, n7, n8],
+            data: [n0, n1, n2, n3, n4, n5, n6, n7, n8],
         };
     }
     pub fn data(&self) -> Box<[f64]> {
-        self.data.clone().into_boxed_slice()
+        Box::new(self.data)
     }
     pub fn set(
         &mut self,
@@ -40,7 +40,7 @@ impl Mat3 {
         n7: f64,
         n8: f64,
     ) {
-        let r = self.data.as_mut_slice();
+        let mut r = self.data;
         r[0] = n0;
         r[1] = n1;
         r[2] = n2;
@@ -52,7 +52,7 @@ impl Mat3 {
         r[8] = n8;
     }
     pub fn copy(&mut self, v: &Mat3) {
-        let data = v.data.as_slice();
+        let data = v.data;
         let n0 = data[0];
         let n1 = data[1];
         let n2 = data[2];
@@ -65,7 +65,7 @@ impl Mat3 {
         self.set(n0, n1, n2, n3, n4, n5, n6, n7, n8);
     }
     pub fn clone(&self) -> Self {
-        let data = self.data.as_slice();
+        let data = self.data;
         let n0 = data[0];
         let n1 = data[1];
         let n2 = data[2];
@@ -92,7 +92,7 @@ impl Mat3 {
     }
     #[wasm_bindgen(js_name = setIdentity)]
     pub fn set_identity(&mut self) {
-        let m = self.data.as_mut_slice();
+        let mut m = self.data;
         m[0] = 1.0;
         m[1] = 0.0;
         m[2] = 0.0;
@@ -106,7 +106,7 @@ impl Mat3 {
         m[8] = 1.0;
     }
     pub fn transpose(&mut self) {
-        let m = self.data.as_mut_slice();
+        let mut m = self.data;
         let mut tmp: f64;
         tmp = m[1];
         m[1] = m[3];

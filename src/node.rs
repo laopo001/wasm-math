@@ -15,7 +15,7 @@ pub struct Node {
     pub local_position: Vec3,
     pub local_rotation: Quat,
     pub local_scale: Vec3,
-    pub local_transform: Mat4,
+    pub(crate) local_transform: Mat4,
     pub(crate) parent: *mut Node,
     pub(crate) children: Vec<*mut Node>,
 }
@@ -28,7 +28,7 @@ impl Node {
             local_position: Vec3::default(),
             local_rotation: Quat::default(),
             local_scale: Vec3::default(),
-            local_transform: Mat4::get_identity(),
+            local_transform: Mat4::default(),
             parent: std::ptr::null_mut(),
             children: vec![],
         };

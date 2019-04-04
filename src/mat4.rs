@@ -1,4 +1,4 @@
-#[warn(dead_code)]
+#[allow(dead_code, unused_mut)]
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
@@ -13,9 +13,9 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct Mat4 {
-    pub(crate) data: [f64; 16],
+    pub data: Box<[f64; 16]>,
 }
 
 #[wasm_bindgen]
@@ -40,14 +40,14 @@ impl Mat4 {
         n15: f64,
     ) -> Self {
         return Mat4 {
-            data: [
+            data: Box::new([
                 n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15,
-            ],
+            ]),
         };
     }
     pub fn add(&mut self, other: &Mat4) {
-        let a = other.data;
-        let mut r = self.data;
+        let a = other.data.as_ref();
+        let mut r = self.data.as_mut();
         r[0] += a[0];
         r[1] += a[1];
         r[2] += a[2];
@@ -66,7 +66,7 @@ impl Mat4 {
         r[15] += a[15];
     }
     pub fn data(&self) -> Box<[f64]> {
-        Box::new(self.data)
+        self.data.clone()
     }
     pub fn set(
         &mut self,
@@ -87,7 +87,7 @@ impl Mat4 {
         n14: f64,
         n15: f64,
     ) {
-        let mut r = self.data;
+        let mut r = self.data.as_mut();
         r[0] = n0;
         r[1] = n1;
         r[2] = n2;
@@ -106,7 +106,7 @@ impl Mat4 {
         r[15] = n15;
     }
     pub fn copy(&mut self, v: &Mat4) {
-        let data = v.data;
+        let data = v.data.as_ref();
         let n0 = data[0];
         let n1 = data[1];
         let n2 = data[2];
@@ -128,7 +128,7 @@ impl Mat4 {
         );
     }
     pub fn clone(&self) -> Self {
-        let data = self.data;
+        let data = self.data.as_ref();
         let n0 = data[0];
         let n1 = data[1];
         let n2 = data[2];
@@ -150,8 +150,8 @@ impl Mat4 {
         );
     }
     pub fn equals(&self, other: &Mat4) -> bool {
-        let r = self.data();
-        let a = other.data();
+        let r = self.data.as_ref();
+        let a = other.data.as_ref();
         return r[0] == a[0]
             && r[1] == a[1]
             && r[2] == a[2]
@@ -171,19 +171,19 @@ impl Mat4 {
     }
     #[wasm_bindgen(js_name = setTranslate)]
     pub fn set_translate(&mut self, x: f64, y: f64, z: f64) {
-        let mut m = self.data;
+        let mut m = self.data.as_mut();
         m[12] = x;
         m[13] = y;
         m[14] = z;
     }
     #[wasm_bindgen(js_name = getTranslate)]
     pub fn get_translate(&self, v: &mut Vec3) {
-        let m = self.data;
+        let m = self.data.as_ref();
         v.set(m[12], m[13], m[14]);
     }
     #[wasm_bindgen(js_name = transformPoint)]
     pub fn transform_point(&self, vec: &Vec3, res: &mut Vec3) {
-        let m = self.data;
+        let m = self.data.as_ref();
         let v = vec.data();
         let x = v[0] * m[0] + v[1] * m[4] + v[2] * m[8] + m[12];
         let y = v[0] * m[1] + v[1] * m[5] + v[2] * m[9] + m[13];
@@ -192,7 +192,7 @@ impl Mat4 {
     }
     #[wasm_bindgen(js_name = setFromAxisAngle)]
     pub fn set_from_axis_angle(&mut self, axis: &Vec3, angle: f64) {
-        let mut m = self.data;
+        let mut m = self.data.as_mut();
         let angle = angle * DEG_TO_RAD;
         let x = axis.x;
         let y = axis.y;
@@ -246,7 +246,7 @@ impl Mat4 {
         let wx = qw * x2;
         let wy = qw * y2;
         let wz = qw * z2;
-        let mut m = self.data;
+        let mut m = self.data.as_mut();
         m[0] = (1.0 - (yy + zz)) * sx;
         m[1] = (xy + wz) * sx;
         m[2] = (xz - wy) * sx;
@@ -269,7 +269,7 @@ impl Mat4 {
     }
     #[wasm_bindgen(js_name = setScale)]
     pub fn set_scale(&mut self, x: f64, y: f64, z: f64) {
-        let mut m = self.data;
+        let mut m = self.data.as_mut();
         m[0] = x;
         m[5] = y;
         m[10] = z;
@@ -285,22 +285,22 @@ impl Mat4 {
     }
     #[wasm_bindgen(js_name = getX)]
     pub fn get_x(&self, v: &mut Vec3) {
-        let m = self.data;
+        let m = self.data.as_ref();
         v.set(m[0], m[1], m[2]);
     }
     #[wasm_bindgen(js_name = getY)]
     pub fn get_y(&self, v: &mut Vec3) {
-        let m = self.data;
+        let m = self.data.as_ref();
         v.set(m[4], m[5], m[6]);
     }
     #[wasm_bindgen(js_name = getZ)]
     pub fn get_z(&self, v: &mut Vec3) {
-        let m = self.data;
+        let m = self.data.as_ref();
         v.set(m[8], m[9], m[10]);
     }
     #[wasm_bindgen(js_name = setIdentity)]
     pub fn set_identity(&mut self) {
-        let mut m = self.data;
+        let mut m = self.data.as_mut();
         m[0] = 1.0;
         m[1] = 0.0;
         m[2] = 0.0;
@@ -320,7 +320,7 @@ impl Mat4 {
     }
     pub fn transpose(&mut self) {
         let mut tmp: f64;
-        let mut m = self.data;
+        let mut m = self.data.as_mut();
         tmp = m[1];
         m[1] = m[4];
         m[4] = tmp;
@@ -346,7 +346,7 @@ impl Mat4 {
         m[14] = tmp;
     }
     pub fn mul(&mut self, other: &Mat4) {
-        let mut m = self.data;
+        let mut m = self.data.as_mut();
         let a00 = m[0];
         let a01 = m[1];
         let a02 = m[2];
@@ -363,7 +363,7 @@ impl Mat4 {
         let a31 = m[13];
         let a32 = m[14];
         let a33 = m[15];
-        let b = other.data;
+        let b = other.data.as_ref();
         let mut b0 = b[0];
         let mut b1 = b[1];
         let mut b2 = b[2];
@@ -401,7 +401,7 @@ impl Mat4 {
         m[15] = a03 * b0 + a13 * b1 + a23 * b2 + a33 * b3;
     }
     pub fn invert(&mut self) {
-        let mut m = self.data;
+        let mut m = self.data.as_mut();
         let a00 = m[0];
         let a01 = m[1];
         let a02 = m[2];
@@ -496,11 +496,11 @@ fn mat4_invert() {
     assert_eq!(mat1.equals(&mat2), true);
 }
 
-// #[test]
-// fn mat4_set_scale_get_scale() {
-//     let mut mat1 = Mat4::get_identity();
-//     mat1.set_scale(3.0, 4.0, 5.0);
-//     let mut v = Vec3::default();
-//     mat1.get_scale(&mut v);
-//     assert!(v.equals(&mut Vec3::new(3.0, 4.0, 5.0)));
-// }
+#[test]
+fn mat4_set_scale_get_scale() {
+    let mut mat1 = Mat4::get_identity();
+    mat1.set_scale(3.0, 4.0, 5.0);
+    let mut v = Vec3::default();
+    mat1.get_scale(&mut v);
+    assert_eq!(v, Vec3::new(3.0, 4.0, 5.0));
+}
