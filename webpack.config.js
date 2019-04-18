@@ -3,7 +3,8 @@ var path = require('path')
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = function (env, webpackConfig) {
-    let webpackDevServer = webpackConfig.$0.endsWith('webpack-dev-server');
+    let webpackDevServer = webpackConfig.$0.match('webpack-dev-server');
+    // console.log(webpackDevServer);
     let res = {
         //页面入口文件配置
         entry: {
