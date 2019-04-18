@@ -5,7 +5,7 @@
  * @author: liaodh
  * @summary: short description for the file
  * -----
- * Last Modified: Thursday, April 4th 2019, 3:34:57 pm
+ * Last Modified: Thursday, April 18th 2019, 7:26:31 pm
  * Modified By: liaodh
  * -----
  * Copyright (c) 2018 jiguang
@@ -28,7 +28,7 @@ console.log(v.data());
 
 let node = new Node();
 console.error(node.local_position.data());
-node.local_position.set(155, 155, 155);
+node.local_position.set(5, 155, 155);
 console.error(node.local_position.data());
 
 let m = Mat4.default();

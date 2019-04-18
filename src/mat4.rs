@@ -15,7 +15,7 @@ extern "C" {
 #[wasm_bindgen]
 #[derive(Clone)]
 pub struct Mat4 {
-    pub data: Box<[f64; 16]>,
+    pub(crate) data: Box<[f64; 16]>,
 }
 
 #[wasm_bindgen]
@@ -47,7 +47,7 @@ impl Mat4 {
     }
     pub fn add(&mut self, other: &Mat4) {
         let a = other.data.as_ref();
-        let mut r = self.data.as_mut();
+        let r = self.data.as_mut();
         r[0] += a[0];
         r[1] += a[1];
         r[2] += a[2];
@@ -87,7 +87,7 @@ impl Mat4 {
         n14: f64,
         n15: f64,
     ) {
-        let mut r = self.data.as_mut();
+        let r = self.data.as_mut();
         r[0] = n0;
         r[1] = n1;
         r[2] = n2;
@@ -171,7 +171,7 @@ impl Mat4 {
     }
     #[wasm_bindgen(js_name = setTranslate)]
     pub fn set_translate(&mut self, x: f64, y: f64, z: f64) {
-        let mut m = self.data.as_mut();
+        let m = self.data.as_mut();
         m[12] = x;
         m[13] = y;
         m[14] = z;
@@ -192,7 +192,7 @@ impl Mat4 {
     }
     #[wasm_bindgen(js_name = setFromAxisAngle)]
     pub fn set_from_axis_angle(&mut self, axis: &Vec3, angle: f64) {
-        let mut m = self.data.as_mut();
+        let m = self.data.as_mut();
         let angle = angle * DEG_TO_RAD;
         let x = axis.x;
         let y = axis.y;
@@ -246,7 +246,7 @@ impl Mat4 {
         let wx = qw * x2;
         let wy = qw * y2;
         let wz = qw * z2;
-        let mut m = self.data.as_mut();
+        let m = self.data.as_mut();
         m[0] = (1.0 - (yy + zz)) * sx;
         m[1] = (xy + wz) * sx;
         m[2] = (xz - wy) * sx;
@@ -269,7 +269,7 @@ impl Mat4 {
     }
     #[wasm_bindgen(js_name = setScale)]
     pub fn set_scale(&mut self, x: f64, y: f64, z: f64) {
-        let mut m = self.data.as_mut();
+        let m = self.data.as_mut();
         m[0] = x;
         m[5] = y;
         m[10] = z;
@@ -300,7 +300,7 @@ impl Mat4 {
     }
     #[wasm_bindgen(js_name = setIdentity)]
     pub fn set_identity(&mut self) {
-        let mut m = self.data.as_mut();
+        let m = self.data.as_mut();
         m[0] = 1.0;
         m[1] = 0.0;
         m[2] = 0.0;
@@ -320,7 +320,7 @@ impl Mat4 {
     }
     pub fn transpose(&mut self) {
         let mut tmp: f64;
-        let mut m = self.data.as_mut();
+        let m = self.data.as_mut();
         tmp = m[1];
         m[1] = m[4];
         m[4] = tmp;
@@ -346,7 +346,7 @@ impl Mat4 {
         m[14] = tmp;
     }
     pub fn mul(&mut self, other: &Mat4) {
-        let mut m = self.data.as_mut();
+        let m = self.data.as_mut();
         let a00 = m[0];
         let a01 = m[1];
         let a02 = m[2];
@@ -401,7 +401,7 @@ impl Mat4 {
         m[15] = a03 * b0 + a13 * b1 + a23 * b2 + a33 * b3;
     }
     pub fn invert(&mut self) {
-        let mut m = self.data.as_mut();
+        let m = self.data.as_mut();
         let a00 = m[0];
         let a01 = m[1];
         let a02 = m[2];

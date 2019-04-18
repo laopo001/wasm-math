@@ -49,7 +49,5 @@ impl Node {
 fn test() {
     let mut node = Node::new();
     node.local_position.set(1.0, 2.0, 3.0);
-    unsafe {
-        assert_eq!(node.local_position.data(), Vec3::new(1.0, 2.0, 3.0).data());
-    }
+    assert_eq!(node.local_position.data(), Vec3::new(1.0, 2.0, 3.0).data());
 }
