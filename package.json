@@ -21,7 +21,7 @@
     "cache-loader": "^1.2.2",
     "co": "^4.6.0",
     "copy-webpack-plugin": "^4.5.1",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-replace": "^0.6.1",
     "jest": "^22.4.3",
     "minimist": "^1.2.0",

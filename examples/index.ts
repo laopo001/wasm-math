@@ -5,7 +5,7 @@
  * @author: liaodh
  * @summary: short description for the file
  * -----
- * Last Modified: Thursday, April 18th 2019, 11:14:48 pm
+ * Last Modified: Friday, April 19th 2019, 5:17:14 pm
  * Modified By: liaodh
  * -----
  * Copyright (c) 2018 jiguang
@@ -39,6 +39,8 @@ let m = Mat4.default();
 console.log(m.data());
 m.set(99, 99, 99, 99, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9);
 console.log(m.data());
+
+
 
 // let node2 = new Node();
 // node.add_child(node2);

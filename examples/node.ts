@@ -5,7 +5,7 @@
  * @author: liaodh
  * @summary: short description for the file
  * -----
- * Last Modified: Thursday, April 4th 2019, 1:10:43 am
+ * Last Modified: Friday, April 19th 2019, 5:16:49 pm
  * Modified By: liaodh
  * -----
  * Copyright (c) 2019 liaodh
@@ -18,7 +18,10 @@ export type Constructor<T> = new (...args) => T;
 export class Read_ptr<T> {
     instance: T;
     constructor(c: Constructor<T>) {
-        this.instance = new c();
+        // const obj = Object.create(c.prototype);
+        // obj.ptr = ptr;
+        // return obj;
+        this.instance = Object.create(c.prototype);
     }
     read(ptr: number): T {
         this.instance['ptr'] = ptr;
