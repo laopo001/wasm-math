@@ -1,5 +1,4 @@
-#![feature(box_into_raw_non_null)]
-#![feature(box_syntax)]
+#![feature(box_into_raw_non_null, box_syntax, box_patterns)]
 extern crate cfg_if;
 
 use cfg_if::cfg_if;
@@ -13,7 +12,6 @@ pub mod mat4;
 pub mod math;
 pub mod node;
 pub mod quat;
-pub mod test;
 pub mod vec2;
 pub mod vec3;
 pub mod vec4;

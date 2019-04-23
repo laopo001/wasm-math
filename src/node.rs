@@ -70,7 +70,7 @@ impl Node {
         }
         if !self._dirty_world {
             self._dirty_world = true;
-            for item in self.children.iter_mut() {
+            for item in self.children.iter() {
                 unsafe {
                     (**item)._dirtify(true);
                 }
