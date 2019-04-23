@@ -15,6 +15,7 @@ pub mod quat;
 pub mod vec2;
 pub mod vec3;
 pub mod vec4;
+
 // pub use self::vec2::Vec2;
 
 #[wasm_bindgen]

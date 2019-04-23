@@ -15,11 +15,14 @@ use std::rc::{Rc, Weak};
 #[wasm_bindgen]
 #[derive(Clone)]
 pub struct Node {
-    pub(crate) local_position: Vec3,
-    pub(crate) local_rotation: Quat,
-    pub(crate) local_scale: Vec3,
-    pub(crate) local_transform: Mat4,
-    pub(crate) world_transform: Mat4,
+    pub(crate) local_position: Box<Vec3>,
+    pub(crate) local_rotation: Box<Quat>,
+    pub(crate) local_scale: Box<Vec3>,
+    pub(crate) local_transform: Box<Mat4>,
+    pub(crate) world_position: Box<Vec3>,
+    pub(crate) world_rotation: Box<Quat>,
+    pub(crate) world_scale: Box<Vec3>,
+    pub(crate) world_transform: Box<Mat4>,
     pub(crate) parent: *mut Node,
     pub(crate) children: Vec<*mut Node>,
     _dirty_local: bool,
@@ -31,11 +34,14 @@ impl Node {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Node {
         return Node {
-            local_position: Vec3::default(),
-            local_rotation: Quat::default(),
-            local_scale: Vec3::default(),
-            local_transform: Mat4::default(),
-            world_transform: Mat4::default(),
+            local_position: box Vec3::default(),
+            local_rotation:box Quat::default(),
+            local_scale:box Vec3::default(),
+            local_transform:box Mat4::default(),
+            world_position:box Vec3::default(),
+            world_rotation:box Quat::default(),
+            world_scale:box Vec3::default(),
+            world_transform:box Mat4::default(),
             parent: std::ptr::null_mut(),
             children: vec![],
             _dirty_local: false,
@@ -58,8 +64,28 @@ impl Node {
             self._dirtify(true);
         }
     }
-    pub fn get_local_position(&self) -> Box<[f64]> {
+    pub fn get_local_position_data(&self) -> Box<[f64]> {
         self.local_position.data()
+    }
+    #[allow(dead_code)]
+    fn get_local_position(&self) -> Vec3 {
+        *self.local_position
+    }
+    pub fn set_world_position(&mut self, x: f64, y: f64, z: f64) {}
+    pub fn get_world_positon(&mut self) -> Vec3 {
+        
+        let world_transform = self.get_world_transform();
+        let mut_vec3 = self.world_position.as_mut();
+        world_transform.get_translate(mut_vec3);
+        return *self.world_position;
+    }
+    #[allow(dead_code)]
+    fn get_world_transform(&mut self) -> Box<Mat4> {
+        if self._dirty_local == false && self._dirty_world == false {
+            return self.world_transform;
+        }
+        self._sync();
+        return self.world_transform;
     }
     pub fn _dirtify(&mut self, local: bool) {
         if self._dirty_local && self._dirty_world {
@@ -90,7 +116,10 @@ impl Node {
             if self.parent.is_null() {
                 self.world_transform.copy(&self.local_transform);
             } else {
-                //
+                unsafe {
+                    self.world_transform
+                        .mul2(&(*self.parent).world_transform, &self.local_transform);
+                }
             }
         }
     }

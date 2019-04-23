@@ -400,6 +400,62 @@ impl Mat4 {
         m[14] = a02 * b0 + a12 * b1 + a22 * b2 + a32 * b3;
         m[15] = a03 * b0 + a13 * b1 + a23 * b2 + a33 * b3;
     }
+    pub fn mul2(&mut self, a: &Mat4, b: &Mat4) {
+        let m = self.data.as_mut();
+        let a = a.data.as_ref();
+        let a00 = a[0];
+        let a01 = a[1];
+        let a02 = a[2];
+        let a03 = a[3];
+        let a10 = a[4];
+        let a11 = a[5];
+        let a12 = a[6];
+        let a13 = a[7];
+        let a20 = a[8];
+        let a21 = a[9];
+        let a22 = a[10];
+        let a23 = a[11];
+        let a30 = a[12];
+        let a31 = a[13];
+        let a32 = a[14];
+        let a33 = a[15];
+        let b = b.data.as_ref();
+        let mut b0 = b[0];
+        let mut b1 = b[1];
+        let mut b2 = b[2];
+        let mut b3 = b[3];
+        m[0] = a00 * b0 + a10 * b1 + a20 * b2 + a30 * b3;
+        m[1] = a01 * b0 + a11 * b1 + a21 * b2 + a31 * b3;
+        m[2] = a02 * b0 + a12 * b1 + a22 * b2 + a32 * b3;
+        m[3] = a03 * b0 + a13 * b1 + a23 * b2 + a33 * b3;
+
+        b0 = b[4];
+        b1 = b[5];
+        b2 = b[6];
+        b3 = b[7];
+        m[4] = a00 * b0 + a10 * b1 + a20 * b2 + a30 * b3;
+        m[5] = a01 * b0 + a11 * b1 + a21 * b2 + a31 * b3;
+        m[6] = a02 * b0 + a12 * b1 + a22 * b2 + a32 * b3;
+        m[7] = a03 * b0 + a13 * b1 + a23 * b2 + a33 * b3;
+
+        b0 = b[8];
+        b1 = b[9];
+        b2 = b[10];
+        b3 = b[11];
+        m[8] = a00 * b0 + a10 * b1 + a20 * b2 + a30 * b3;
+        m[9] = a01 * b0 + a11 * b1 + a21 * b2 + a31 * b3;
+        m[10] = a02 * b0 + a12 * b1 + a22 * b2 + a32 * b3;
+        m[11] = a03 * b0 + a13 * b1 + a23 * b2 + a33 * b3;
+
+        b0 = b[12];
+        b1 = b[13];
+        b2 = b[14];
+        b3 = b[15];
+        m[12] = a00 * b0 + a10 * b1 + a20 * b2 + a30 * b3;
+        m[13] = a01 * b0 + a11 * b1 + a21 * b2 + a31 * b3;
+        m[14] = a02 * b0 + a12 * b1 + a22 * b2 + a32 * b3;
+        m[15] = a03 * b0 + a13 * b1 + a23 * b2 + a33 * b3;
+    }
     pub fn invert(&mut self) {
         let m = self.data.as_mut();
         let a00 = m[0];
