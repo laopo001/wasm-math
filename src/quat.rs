@@ -76,6 +76,20 @@ impl Quat {
         self.z = q1w * q2z + q1z * q2w + q1x * q2y - q1y * q2x;
         self.w = q1w * q2w - q1x * q2x - q1y * q2y - q1z * q2z;
     }
+    pub fn mul2(&mut self, a: &Quat,b: &Quat) { 
+        let q1x = a.x;
+        let q1y = a.y;
+        let q1z = a.z;
+        let q1w = a.w;
+        let q2x = b.x;
+        let q2y = b.y;
+        let q2z = b.z;
+        let q2w = b.w;
+        self.x = q1w * q2x + q1x * q2w + q1y * q2z - q1z * q2y;
+        self.y = q1w * q2y + q1y * q2w + q1z * q2x - q1x * q2z;
+        self.z = q1w * q2z + q1z * q2w + q1x * q2y - q1y * q2x;
+        self.w = q1w * q2w - q1x * q2x - q1y * q2y - q1z * q2z;
+    }
     #[wasm_bindgen(js_name = setFromAxisAngle)]
     pub fn set_from_axis_angle(&mut self, axis: &Vec3, angle: f64) {
         let angle_rad = angle * 0.5 * DEG_TO_RAD;
@@ -259,6 +273,15 @@ impl Quat {
     }
     pub fn zero() -> Self {
         Quat::new(0.0, 0.0, 0.0, 0.0)
+    }
+    fn conjugate(&mut self) -> &mut Self {
+        self.x *= -1.0;
+        self.y *= -1.0;
+        self.z *= -1.0;
+        return self;
+    }
+    pub fn invert(&mut self) {
+        return self.conjugate().normalize();
     }
 }
 
