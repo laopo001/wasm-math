@@ -186,3 +186,13 @@ fn test_set_get_position() {
     node.set_position(1.0, 2.0, 3.0);
     assert_eq!(node.get_positon().data(), Vec3::new(1.0, 2.0, 3.0).data());
 }
+
+#[test]
+fn test_set_get_local_position() {
+    let mut node = Node::new();
+    node.set_local_position(1.0, 2.0, 3.0);
+    assert_eq!(
+        node.get_local_position().data(),
+        Vec3::new(1.0, 2.0, 3.0).data()
+    );
+}
