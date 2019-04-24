@@ -85,7 +85,7 @@ impl Node {
 
     }
     #[allow(dead_code)]
-    fn get_positon(&mut self) -> &Vec3 {
+    fn get_position(&mut self) -> &Vec3 {
         unsafe {
             let world_transform_ptr = self.get_world_transform();
             let mut_vec3 = self.world_position.as_mut();
@@ -153,6 +153,7 @@ impl Node {
         let world_transform_ptr = self.world_transform.get();
         let local_transform_ptr = self.local_transform.get();
         unsafe {
+            let parent_world_transform_ptr = (*self.parent).world_transform.get();
             if self._dirty_local {
                 (*local_transform_ptr).set_from_trs(
                     &self.local_position,
@@ -165,8 +166,10 @@ impl Node {
                 if self.parent.is_null() {
                     (*world_transform_ptr).copy(&*local_transform_ptr);
                 } else {
-                    (*world_transform_ptr).mul2(&*world_transform_ptr, &*local_transform_ptr);
+                    (*world_transform_ptr)
+                        .mul2(&*parent_world_transform_ptr, &*local_transform_ptr);
                 }
+                self._dirty_world = false;
             }
         }
     }
@@ -184,7 +187,7 @@ fn test() {
 fn test_set_get_position() {
     let mut node = Node::new();
     node.set_position(1.0, 2.0, 3.0);
-    assert_eq!(node.get_positon().data(), Vec3::new(1.0, 2.0, 3.0).data());
+    assert_eq!(node.get_position().data(), Vec3::new(1.0, 2.0, 3.0).data());
 }
 
 #[test]
@@ -195,4 +198,13 @@ fn test_set_get_local_position() {
         node.get_local_position().data(),
         Vec3::new(1.0, 2.0, 3.0).data()
     );
+}
+
+#[test]
+fn test_child_set_get_position() {
+    let mut node = Node::new();
+    let mut child = Node::new();
+    node.set_local_position(1.0, 2.0, 3.0);
+    child.set_local_position(1.0, 2.0, 3.0);
+    assert_eq!(child.get_position().data(), Vec3::new(2.0, 4.0, 6.0).data());
 }
