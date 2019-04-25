@@ -60,8 +60,8 @@ impl Node {
         }
     }
     #[allow(dead_code)]
-    fn get_local_position(&self) -> Vec3 {
-        *self.local_position
+    fn get_local_position(&self) -> &Vec3 {
+        self.local_position.as_ref()
     }
 
     pub fn set_position(&mut self, x: f64, y: f64, z: f64) {
