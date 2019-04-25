@@ -3,6 +3,7 @@ extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
+#[derive(Clone, Debug)]
 pub struct Mat3 {
     pub(crate) data: [f64; 9],
 }
@@ -64,19 +65,19 @@ impl Mat3 {
         let n8 = data[8];
         self.set(n0, n1, n2, n3, n4, n5, n6, n7, n8);
     }
-    pub fn clone(&self) -> Self {
-        let data = self.data;
-        let n0 = data[0];
-        let n1 = data[1];
-        let n2 = data[2];
-        let n3 = data[3];
-        let n4 = data[4];
-        let n5 = data[5];
-        let n6 = data[6];
-        let n7 = data[7];
-        let n8 = data[8];
-        return Mat3::new(n0, n1, n2, n3, n4, n5, n6, n7, n8);
-    }
+    // pub fn clone(&self) -> Self {
+    //     let data = self.data;
+    //     let n0 = data[0];
+    //     let n1 = data[1];
+    //     let n2 = data[2];
+    //     let n3 = data[3];
+    //     let n4 = data[4];
+    //     let n5 = data[5];
+    //     let n6 = data[6];
+    //     let n7 = data[7];
+    //     let n8 = data[8];
+    //     return Mat3::new(n0, n1, n2, n3, n4, n5, n6, n7, n8);
+    // }
     pub fn equals(&self, other: &Mat3) -> bool {
         let r = self.data();
         let a = other.data();

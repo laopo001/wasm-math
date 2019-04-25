@@ -13,7 +13,7 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Mat4 {
     pub(crate) data: Box<[f64; 16]>,
 }

@@ -20,12 +20,13 @@ pub struct Node {
     pub(crate) local_transform: UnsafeCell<Mat4>,
     pub(crate) world_position: Box<Vec3>,
     pub(crate) world_rotation: Box<Quat>,
-    pub(crate) world_scale: Box<Vec3>,
+    // pub(crate) world_scale: Box<Vec3>,
     pub(crate) world_transform: UnsafeCell<Mat4>,
     pub(crate) parent: *mut Node,
     pub(crate) children: Vec<*mut Node>,
     _dirty_local: bool,
     _dirty_world: bool,
+    enabled: bool,
 }
 
 #[wasm_bindgen]
@@ -35,28 +36,23 @@ impl Node {
         return Node {
             local_position: box Vec3::default(),
             local_rotation: box Quat::default(),
-            local_scale: box Vec3::default(),
+            local_scale: box Vec3::new(1.0, 1.0, 1.0),
             local_transform: UnsafeCell::new(Mat4::default()),
             world_position: box Vec3::default(),
             world_rotation: box Quat::default(),
-            world_scale: box Vec3::default(),
+            // world_scale: box Vec3::new(1.0, 1.0, 1.0),
             world_transform: UnsafeCell::new(Mat4::default()),
             parent: std::ptr::null_mut(),
             children: vec![],
             _dirty_local: false,
             _dirty_world: false,
+            enabled: true,
         };
     }
     pub fn add_child(&mut self, child: &mut Node) {
         child.parent = self;
         self.children.push(child);
     }
-    // pub fn get_parent_ptr(&self) -> *mut Node {
-    //     return self.parent;
-    // }
-    // pub fn get_child_ptr(&self, index: usize) -> *mut Node {
-    //     return self.children[index];
-    // }
     pub fn set_local_position(&mut self, x: f64, y: f64, z: f64) {
         self.local_position.set(x, y, z);
         if !self._dirty_local {
@@ -129,6 +125,11 @@ impl Node {
         if self._dirty_local == false && self._dirty_world == false {
             return self.world_transform.get();
         }
+        if !self.parent.is_null() {
+            unsafe {
+                (*self.parent).get_world_transform();
+            }
+        }
         self._sync();
         return self.world_transform.get();
     }
@@ -149,11 +150,24 @@ impl Node {
             }
         }
     }
+    #[allow(dead_code, unused_parens)]
+    fn sync_hierarchy(&mut self) {
+        if (!self.enabled) {
+            return;
+        }
+        if self._dirty_local || self._dirty_world {
+            self._sync();
+        }
+        for i in 0..(self.children.len()) {
+            unsafe {
+                (*self.children[i]).sync_hierarchy();
+            }
+        }
+    }
     pub fn _sync(&mut self) {
         let world_transform_ptr = self.world_transform.get();
         let local_transform_ptr = self.local_transform.get();
         unsafe {
-            let parent_world_transform_ptr = (*self.parent).world_transform.get();
             if self._dirty_local {
                 (*local_transform_ptr).set_from_trs(
                     &self.local_position,
@@ -163,9 +177,19 @@ impl Node {
                 self._dirty_local = false;
             }
             if self._dirty_world {
+
                 if self.parent.is_null() {
                     (*world_transform_ptr).copy(&*local_transform_ptr);
                 } else {
+
+                    let parent_world_transform_ptr = (*self.parent).world_transform.get();
+                    println!("local_transform_ptr---{:?}", *local_transform_ptr);
+                    println!("world_transform_ptr--{:?}", *world_transform_ptr);
+                    println!(
+                        "parent_world_transform_ptr---{:?}",
+                        *parent_world_transform_ptr
+                    );
+
                     (*world_transform_ptr)
                         .mul2(&*parent_world_transform_ptr, &*local_transform_ptr);
                 }
@@ -204,7 +228,14 @@ fn test_set_get_local_position() {
 fn test_child_set_get_position() {
     let mut node = Node::new();
     let mut child = Node::new();
+    let mut grandson = Node::new();
+    node.add_child(&mut child);
+    child.add_child(&mut grandson);
     node.set_local_position(1.0, 2.0, 3.0);
     child.set_local_position(1.0, 2.0, 3.0);
-    assert_eq!(child.get_position().data(), Vec3::new(2.0, 4.0, 6.0).data());
+    grandson.set_local_position(1.0, 2.0, 3.0);
+    assert_eq!(
+        grandson.get_position().data(),
+        Vec3::new(3.0, 6.0, 9.0).data()
+    );
 }
