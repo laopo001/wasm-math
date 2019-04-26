@@ -4,7 +4,7 @@ extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
 use crate::mat4::Mat4;
-use crate::math::DEG_TO_RAD;
+use crate::math::{DEG_TO_RAD, RAD_TO_DEG};
 use crate::vec3::Vec3;
 
 #[wasm_bindgen]
@@ -76,7 +76,7 @@ impl Quat {
         self.z = q1w * q2z + q1z * q2w + q1x * q2y - q1y * q2x;
         self.w = q1w * q2w - q1x * q2x - q1y * q2y - q1z * q2z;
     }
-    pub fn mul2(&mut self, a: &Quat,b: &Quat) { 
+    pub fn mul2(&mut self, a: &Quat, b: &Quat) {
         let q1x = a.x;
         let q1y = a.y;
         let q1z = a.z;
@@ -282,6 +282,33 @@ impl Quat {
     }
     pub fn invert(&mut self) {
         return self.conjugate().normalize();
+    }
+    #[wasm_bindgen(js_name = getEulerAngles)]
+    pub fn get_euler_angles(&self, eulers: &mut Vec3) {
+        let qx = self.x;
+
+        let qy = self.y;
+        let qz = self.z;
+        let qw = self.w;
+        let a2 = 2.0 * (qw * qy - qx * qz);
+        let x: f64;
+        let y: f64;
+        let z: f64;
+        if a2 <= -0.99999 {
+            x = 2.0 * qx.atan2(qw);
+            y = -std::f64::consts::PI / 2.0;
+            z = 0.0;
+        } else if a2 >= 0.99999 {
+            x = 2.0 * qx.atan2(qw);
+            y = std::f64::consts::PI / 2.0;
+            z = 0.0;
+        } else {
+            x = (2.0 * (qw * qx + qy * qz)).atan2(1.0 - 2.0 * (qx * qx + qy * qy));
+            y = a2.asin();
+            z = (2.0 * (qw * qz + qx * qy)).atan2(1.0 - 2.0 * (qy * qy + qz * qz));
+        }
+        eulers.set(x, y, z);
+        eulers.scale(RAD_TO_DEG);
     }
 }
 

@@ -17,9 +17,10 @@ mod tests {
     #[bench]
     fn bench_add_two(b: &mut Bencher) {
         b.iter(|| {
-            // for _ in 0..1000000000 {
-            //     add_two(2);
-            // }
+            let mut arr: Vec<i32> = vec![];
+            for _ in 0..10000 {
+                arr.push(add_two(2));
+            }
             add_two(2)
         });
     }

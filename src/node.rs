@@ -17,6 +17,7 @@ pub struct Node {
     pub(crate) local_position: Box<Vec3>,
     pub(crate) local_rotation: Box<Quat>,
     pub(crate) local_scale: Box<Vec3>,
+    pub(crate) local_euler_angle: Box<Vec3>,
     pub(crate) local_transform: UnsafeCell<Mat4>,
     pub(crate) world_position: Box<Vec3>,
     pub(crate) world_rotation: Box<Quat>,
@@ -36,6 +37,7 @@ impl Node {
         return Node {
             local_position: box Vec3::default(),
             local_rotation: box Quat::default(),
+            local_euler_angle: box Vec3::default(),
             local_scale: box Vec3::new(1.0, 1.0, 1.0),
             local_transform: UnsafeCell::new(Mat4::default()),
             world_position: box Vec3::default(),
@@ -49,21 +51,26 @@ impl Node {
             enabled: true,
         };
     }
+    #[wasm_bindgen(js_name = addChild)]
     pub fn add_child(&mut self, child: &mut Node) {
         child.parent = self;
         self.children.push(child);
     }
+    #[wasm_bindgen(js_name = setLocalPosition)]
     pub fn set_local_position(&mut self, x: f64, y: f64, z: f64) {
         self.local_position.set(x, y, z);
         if !self._dirty_local {
             self._dirtify(true);
         }
     }
-    #[allow(dead_code)]
-    fn get_local_position(&self) -> &Vec3 {
+    pub(crate) fn get_local_position(&self) -> &Vec3 {
         self.local_position.as_ref()
     }
-
+    #[wasm_bindgen(js_name = getLocalPositionData)]
+    pub fn get_local_position_data(&mut self) -> Box<[f64]> {
+        self.get_local_position().data()
+    }
+    #[wasm_bindgen(js_name = setPosition)]
     pub fn set_position(&mut self, x: f64, y: f64, z: f64) {
         unsafe {
             if self.parent.is_null() {
@@ -80,8 +87,7 @@ impl Node {
         }
 
     }
-    #[allow(dead_code)]
-    fn get_position(&mut self) -> &Vec3 {
+    pub(crate) fn get_position(&mut self) -> &Vec3 {
         unsafe {
             let world_transform_ptr = self.get_world_transform();
             let mut_vec3 = self.world_position.as_mut();
@@ -89,8 +95,9 @@ impl Node {
         }
         return self.world_position.as_ref();
     }
-    pub fn get_position_data(&self) -> Box<[f64]> {
-        self.local_position.data()
+    #[wasm_bindgen(js_name = getPositionData)]
+    pub fn get_position_data(&mut self) -> Box<[f64]> {
+        self.get_position().data()
     }
     fn get_rotation(&mut self) -> &Quat {
         unsafe {
@@ -99,7 +106,7 @@ impl Node {
             return self.world_rotation.as_ref();
         }
     }
-
+    #[wasm_bindgen(js_name = setEulerAngles)]
     pub fn set_euler_angles(&mut self, x: f64, y: f64, z: f64) {
         self.local_rotation.set_from_euler_angles(x, y, z);
         unsafe {
@@ -114,14 +121,23 @@ impl Node {
         }
 
     }
+    #[wasm_bindgen(js_name = setLocalEulerAngles)]
     pub fn set_local_euler_angles(&mut self, x: f64, y: f64, z: f64) {
         self.local_rotation.set_from_euler_angles(x, y, z);
         if !self._dirty_local {
             self._dirtify(true);
         }
     }
-    #[allow(dead_code)]
-    fn get_world_transform(&mut self) -> *mut Mat4 {
+    pub(crate) fn get_local_enler_angles(&mut self) -> &Vec3 {
+        self.local_rotation
+            .get_euler_angles(self.local_euler_angle.as_mut());
+        return self.local_euler_angle.as_ref();
+    }
+    #[wasm_bindgen(js_name = getLocalEulerAnglesData)]
+    pub fn get_local_enler_angles_data(&mut self) -> Box<[f64]> {
+        self.get_local_enler_angles().data()
+    }
+    pub(crate) fn get_world_transform(&mut self) -> *mut Mat4 {
         if self._dirty_local == false && self._dirty_world == false {
             return self.world_transform.get();
         }
@@ -134,7 +150,7 @@ impl Node {
         return self.world_transform.get();
     }
 
-    pub fn _dirtify(&mut self, local: bool) {
+    fn _dirtify(&mut self, local: bool) {
         if self._dirty_local && self._dirty_world {
             return;
         }
@@ -151,7 +167,7 @@ impl Node {
         }
     }
     #[allow(dead_code, unused_parens)]
-    fn sync_hierarchy(&mut self) {
+    pub fn sync_hierarchy(&mut self) {
         if (!self.enabled) {
             return;
         }
@@ -183,12 +199,12 @@ impl Node {
                 } else {
 
                     let parent_world_transform_ptr = (*self.parent).world_transform.get();
-                    println!("local_transform_ptr---{:?}", *local_transform_ptr);
-                    println!("world_transform_ptr--{:?}", *world_transform_ptr);
-                    println!(
-                        "parent_world_transform_ptr---{:?}",
-                        *parent_world_transform_ptr
-                    );
+                    // println!("local_transform_ptr---{:?}", *local_transform_ptr);
+                    // println!("world_transform_ptr--{:?}", *world_transform_ptr);
+                    // println!(
+                    //     "parent_world_transform_ptr---{:?}",
+                    //     *parent_world_transform_ptr
+                    // );
 
                     (*world_transform_ptr)
                         .mul2(&*parent_world_transform_ptr, &*local_transform_ptr);
