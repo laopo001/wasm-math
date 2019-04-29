@@ -127,28 +127,28 @@ impl Mat4 {
             n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15,
         );
     }
-    pub fn clone(&self) -> Self {
-        let data = self.data.as_ref();
-        let n0 = data[0];
-        let n1 = data[1];
-        let n2 = data[2];
-        let n3 = data[3];
-        let n4 = data[4];
-        let n5 = data[5];
-        let n6 = data[6];
-        let n7 = data[7];
-        let n8 = data[8];
-        let n9 = data[9];
-        let n10 = data[10];
-        let n11 = data[11];
-        let n12 = data[12];
-        let n13 = data[13];
-        let n14 = data[14];
-        let n15 = data[15];
-        return Mat4::new(
-            n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15,
-        );
-    }
+    // pub fn clone(&self) -> Self {
+    //     let data = self.data.as_ref();
+    //     let n0 = data[0];
+    //     let n1 = data[1];
+    //     let n2 = data[2];
+    //     let n3 = data[3];
+    //     let n4 = data[4];
+    //     let n5 = data[5];
+    //     let n6 = data[6];
+    //     let n7 = data[7];
+    //     let n8 = data[8];
+    //     let n9 = data[9];
+    //     let n10 = data[10];
+    //     let n11 = data[11];
+    //     let n12 = data[12];
+    //     let n13 = data[13];
+    //     let n14 = data[14];
+    //     let n15 = data[15];
+    //     return Mat4::new(
+    //         n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15,
+    //     );
+    // }
     pub fn equals(&self, other: &Mat4) -> bool {
         let r = self.data.as_ref();
         let a = other.data.as_ref();

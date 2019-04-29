@@ -5,18 +5,25 @@
  * @author: liaodh
  * @summary: short description for the file
  * -----
- * Last Modified: Friday, April 26th 2019, 8:10:18 pm
+ * Last Modified: Monday, April 29th 2019, 4:39:23 pm
  * Modified By: liaodh
  * -----
  * Copyright (c) 2018 jiguang
  */
 
 import {
-    Node,
+    Node, Mat4
 } from '../pkg/wasm_math.js';
 import {
     SceneNode
 } from 'hypergl';
+
+let m1 = new Mat4(9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+let m2 = new Mat4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+m2.copy(m1);
+console.log(m2.data());
+
+
 
 let count = 10000;
 function test1() {

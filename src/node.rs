@@ -212,6 +212,7 @@ impl Node {
     }
     pub fn _sync(&mut self) {
         let local_transform_ptr = self.local_transform.get();
+        let world_transform_ptr = self.world_transform.get();
         unsafe {
             if self._dirty_local {
                 (*local_transform_ptr).set_from_trs(
@@ -222,9 +223,11 @@ impl Node {
                 self._dirty_local = false;
             }
             if self._dirty_world {
-                let world_transform_ptr = self.world_transform.get();
+
                 if self.parent.is_null() {
-                    // (*world_transform_ptr).copy(&*local_transform_ptr);
+                    let temp = &*local_transform_ptr;
+                    // release 编译会无限循环
+                    (*world_transform_ptr).copy(&temp.clone());
                 } else {
 
                     let parent_world_transform_ptr = (*self.parent).world_transform.get();

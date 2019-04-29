@@ -73,9 +73,9 @@ impl Vec3 {
     pub fn copy(&mut self, v: &Vec3) {
         self.set(v.x, v.y, v.z);
     }
-    pub fn clone(&self) -> Self {
-        return Vec3::new(self.x, self.y, self.z);
-    }
+    // pub fn clone(&self) -> Self {
+    //     return Vec3::new(self.x, self.y, self.z);
+    // }
     pub fn equals(&self, other: &Vec3) -> bool {
         return self.x == other.x && self.y == other.y && self.z == other.z;
     }

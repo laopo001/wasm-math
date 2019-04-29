@@ -3,6 +3,7 @@ extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
+#[derive(Clone, Copy, Debug)]
 pub struct Vec2 {
     pub x: f64,
     pub y: f64,
@@ -59,9 +60,9 @@ impl Vec2 {
     pub fn copy(&mut self, v: &Vec2) {
         self.set(v.x, v.y);
     }
-    pub fn clone(&self) -> Self {
-        return Vec2::new(self.x, self.y);
-    }
+    // pub fn clone(&self) -> Self {
+    //     return Vec2::new(self.x, self.y);
+    // }
     pub fn equals(&self, other: &Vec2) -> bool {
         return self.x == other.x && self.y == other.y;
     }

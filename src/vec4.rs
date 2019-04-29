@@ -4,6 +4,7 @@ extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
+#[derive(Clone, Copy, Debug)]
 pub struct Vec4 {
     pub x: f64,
     pub y: f64,
@@ -74,9 +75,9 @@ impl Vec4 {
     pub fn copy(&mut self, v: &Vec4) {
         self.set(v.x, v.y, v.z, v.w);
     }
-    pub fn clone(&self) -> Self {
-        return Vec4::new(self.x, self.y, self.z, self.w);
-    }
+    // pub fn clone(&self) -> Self {
+    //     return Vec4::new(self.x, self.y, self.z, self.w);
+    // }
     pub fn equals(&self, other: &Vec4) -> bool {
         return self.x == other.x && self.y == other.y && self.z == other.z && self.w == other.w;
     }
@@ -87,6 +88,6 @@ impl Vec4 {
         self.w = l.w + alpha * (r.w - l.w);
     }
     pub fn default() -> Self {
-        Vec4::new(0.0, 0.0, 0.0,1.0)
+        Vec4::new(0.0, 0.0, 0.0, 1.0)
     }
 }
