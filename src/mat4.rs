@@ -2,7 +2,7 @@
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
-use crate::math::DEG_TO_RAD;
+use crate::math::{DEG_TO_RAD, RAD_TO_DEG};
 use crate::quat::Quat;
 use crate::vec3::Vec3;
 
@@ -266,6 +266,34 @@ impl Mat4 {
         m[13] = ty;
         m[14] = tz;
         m[15] = 1.0;
+    }
+    #[wasm_bindgen(js_name = getEulerAngles)]
+    pub fn get_euler_angles(&self, eulers: &mut Vec3) {
+        let mut scale = Vec3::default();
+        self.get_scale(&mut scale);
+        let sx = scale.x;
+        let sy = scale.y;
+        let sz = scale.z;
+
+        let m = self.data.as_ref();
+        let x: f64;
+        let y = (-m[2] / sx).asin();
+        let z: f64;
+        let half_pi = std::f64::consts::PI * 0.5;
+        if y < half_pi {
+            if y > -half_pi {
+                x = (m[6] / sy).atan2(m[10] / sz);
+                z = (m[1] / sx).atan2(m[0] / sx);
+            } else {
+                z = 0.0;
+                x = -(m[4] / sy).atan2(m[5] / sy);
+            }
+        } else {
+            z = 0.0;
+            x = (m[4] / sy).atan2(m[5] / sy);
+        }
+        eulers.set(x, y, z);
+        eulers.scale(RAD_TO_DEG);
     }
     #[wasm_bindgen(js_name = setScale)]
     pub fn set_scale(&mut self, x: f64, y: f64, z: f64) {

@@ -116,20 +116,20 @@ impl Node {
             self._dirtify(true);
         }
     }
-    pub(crate) fn get_local_enler_angles(&mut self) -> &Vec3 {
+    pub(crate) fn get_local_euler_angles(&mut self) -> &Vec3 {
         self.local_rotation
             .get_euler_angles(self.local_euler_angle.as_mut());
         return self.local_euler_angle.as_ref();
     }
     #[wasm_bindgen(js_name = getLocalEulerAnglesData)]
     pub fn get_local_enler_angles_data(&mut self) -> Box<[f64]> {
-        self.get_local_enler_angles().data()
+        self.get_local_euler_angles().data()
     }
     #[wasm_bindgen(js_name = setEulerAngles)]
     pub fn set_euler_angles(&mut self, x: f64, y: f64, z: f64) {
         self.local_rotation.set_from_euler_angles(x, y, z);
         unsafe {
-            if self.parent.is_null() {
+            if !self.parent.is_null() {
                 let mut inv_parent_rotation = (*self.parent).get_rotation().clone();
                 inv_parent_rotation.invert();
                 self.local_rotation.as_mut().mul(&inv_parent_rotation);
@@ -140,14 +140,16 @@ impl Node {
         }
 
     }
-    pub(crate) fn get_enler_angles(&mut self) -> &Vec3 {
-        self.world_rotation
-            .get_euler_angles(self.world_euler_angle.as_mut());
-        return self.world_euler_angle.as_ref();
+    pub(crate) fn get_euler_angles(&mut self) -> &Vec3 {
+        unsafe {
+            let world_transform = &*self.get_world_transform();
+            world_transform.get_euler_angles(self.world_euler_angle.as_mut());
+            return self.world_euler_angle.as_ref();
+        }
     }
     #[wasm_bindgen(js_name = getEulerAnglesData)]
     pub fn get_enler_angles_data(&mut self) -> Box<[f64]> {
-        self.get_enler_angles().data()
+        self.get_euler_angles().data()
     }
 
     pub(crate) fn get_world_transform(&mut self) -> *mut Mat4 {
@@ -226,7 +228,7 @@ impl Node {
 
                 if self.parent.is_null() {
                     let temp = &*local_transform_ptr;
-                    // release 编译会无限循环
+                    // release 编译会无限循环 所以加上了clone
                     (*world_transform_ptr).copy(&temp.clone());
                 } else {
 
@@ -246,8 +248,8 @@ impl Clone for Node {
         c.local_position = self.local_position.clone();
         c.local_rotation = self.local_rotation.clone();
         c.local_scale = self.local_scale.clone();
-        c._dirty_local = false;
-        c._dirty_world = false;
+        // c._dirty_local = false;
+        // c._dirty_world = false;
         for child in self.children.iter() {
             unsafe {
                 let mut clone_child = (**child).clone();
@@ -298,6 +300,61 @@ fn test_child_set_get_position() {
     assert_eq!(
         grandson.get_local_position().data(),
         Vec3::new(-2.0, -4.0, -6.0).data()
+    );
+}
+
+
+#[test]
+fn test_child_set_get_local_angles() {
+    let mut node = Node::new();
+    node.set_local_euler_angles(1.0, 2.0, 3.0);
+    assert_eq!(
+        node.get_local_euler_angles()
+            .data()
+            .into_iter()
+            .map(|x| x.round())
+            .collect::<Box<[f64]>>(),
+        Vec3::new(1.0, 2.0, 3.0).data()
+    );
+}
+
+#[test]
+fn test_child_set_get_angles() {
+    let mut node = Node::new();
+    let mut child = Node::new();
+    let mut grandson = Node::new();
+    node.add_child(&mut child);
+    child.add_child(&mut grandson);
+    node.set_local_euler_angles(1.0, 0.0, 0.0);
+    child.set_local_euler_angles(1.0, 0.0, 0.0);
+    grandson.set_local_euler_angles(1.0, 0.0, 0.0);
+    assert_eq!(
+        grandson
+            .get_euler_angles()
+            .data()
+            .into_iter()
+            .map(|x| x.round())
+            .collect::<Box<[f64]>>(),
+        Vec3::new(3.0, 0.0, 0.0).data()
+    );
+    grandson.set_euler_angles(0.0, 0.0, 0.0);
+    assert_eq!(
+        grandson
+            .get_euler_angles()
+            .data()
+            .into_iter()
+            .map(|x| x.round())
+            .collect::<Box<[f64]>>(),
+        Vec3::new(0.0, 0.0, 0.0).data()
+    );
+    assert_eq!(
+        grandson
+            .get_local_euler_angles()
+            .data()
+            .into_iter()
+            .map(|x| x.round())
+            .collect::<Box<[f64]>>(),
+        Vec3::new(-2.0, 0.0, 0.0).data()
     );
 }
 

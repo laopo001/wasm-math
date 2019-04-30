@@ -1,3 +1,4 @@
+use std::io::{self, BufRead, Read};
 use wasm_math::mat4::Mat4;
 use wasm_math::quat::Quat;
 use wasm_math::vec3::Vec3;
@@ -34,6 +35,9 @@ fn main() {
     let mut res = Vec3::default();
     q.transform_vector(&v, &mut res);
     println!("{:?}", res.data());
+
+    let stdin = io::stdin();
+    let _line1 = stdin.lock().lines().next().unwrap().unwrap();
 }
 
 #[allow(unused_variables)]
