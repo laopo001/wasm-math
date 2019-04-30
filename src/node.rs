@@ -184,6 +184,20 @@ impl Node {
             return (&*ptr).data();
         }
     }
+    #[wasm_bindgen(js_name = setLocalScale)]
+    pub fn set_local_scale(&mut self, x: f64, y: f64, z: f64) {
+        self.local_scale.as_mut().set(x, y, z);
+        if !self._dirty_local {
+            self._dirtify(true);
+        }
+    }
+    fn get_local_scale(&mut self) -> &Vec3 {
+        self.local_scale.as_ref()
+    }
+    #[wasm_bindgen(js_name = getLocalScaleData)]
+    pub fn get_local_scale_data(&mut self) -> Box<[f64]> {
+        self.get_local_scale().data()
+    }
     fn _dirtify(&mut self, local: bool) {
         if local {
             self._dirty_local = true;
@@ -355,6 +369,21 @@ fn test_child_set_get_angles() {
             .map(|x| x.round())
             .collect::<Box<[f64]>>(),
         Vec3::new(-2.0, 0.0, 0.0).data()
+    );
+}
+
+
+#[test]
+fn test_child_set_get_local_scale() {
+    let mut node = Node::new();
+    node.set_local_scale(1.0, 2.0, 3.0);
+    assert_eq!(
+        node.get_local_scale()
+            .data()
+            .into_iter()
+            .map(|x| x.round())
+            .collect::<Box<[f64]>>(),
+        Vec3::new(1.0, 2.0, 3.0).data()
     );
 }
 
