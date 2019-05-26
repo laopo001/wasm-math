@@ -10,26 +10,26 @@ use crate::vec3::Vec3;
 #[wasm_bindgen]
 #[derive(Debug,Clone, Copy)]
 pub struct Quat {
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
-    pub w: f64,
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
+    pub w: f32,
 }
 
 #[wasm_bindgen]
 impl Quat {
     #[wasm_bindgen(constructor)]
-    pub fn new(x: f64, y: f64, z: f64, w: f64) -> Quat {
+    pub fn new(x: f32, y: f32, z: f32, w: f32) -> Quat {
         return Quat { x, y, z, w };
     }
-    pub fn data(&self) -> Box<[f64]> {
+    pub fn data(&self) -> Box<[f32]> {
         return Box::new([self.x, self.y, self.z, self.w]);
     }
     #[wasm_bindgen(js_name = lengthSq)]
-    pub fn length_sq(&self) -> f64 {
+    pub fn length_sq(&self) -> f32 {
         return self.x * self.x + self.y * self.y + self.z * self.z + self.w * self.w;
     }
-    pub fn length(&self) -> f64 {
+    pub fn length(&self) -> f32 {
         self.length_sq().sqrt()
     }
     pub fn normalize(&mut self) {
@@ -47,7 +47,7 @@ impl Quat {
         self.z *= inv;
         self.w *= inv;
     }
-    pub fn set(&mut self, x: f64, y: f64, z: f64, w: f64) {
+    pub fn set(&mut self, x: f32, y: f32, z: f32, w: f32) {
         self.x = x;
         self.y = y;
         self.z = z;
@@ -91,7 +91,7 @@ impl Quat {
         self.w = q1w * q2w - q1x * q2x - q1y * q2y - q1z * q2z;
     }
     #[wasm_bindgen(js_name = setFromAxisAngle)]
-    pub fn set_from_axis_angle(&mut self, axis: &Vec3, angle: f64) {
+    pub fn set_from_axis_angle(&mut self, axis: &Vec3, angle: f32) {
         let angle_rad = angle * 0.5 * DEG_TO_RAD;
         let sa = angle_rad.sin();
         let ca = angle_rad.cos();
@@ -101,7 +101,7 @@ impl Quat {
         self.w = ca;
     }
     #[wasm_bindgen(js_name = setFromEulerAngles)]
-    pub fn set_from_euler_angles(&mut self, ex: f64, ey: f64, ez: f64) {
+    pub fn set_from_euler_angles(&mut self, ex: f32, ey: f32, ez: f32) {
         let hald = 0.5 * DEG_TO_RAD;
 
         let ex = ex * hald;
@@ -146,7 +146,7 @@ impl Quat {
         m21 *= lz;
         m22 *= lz;
         let tr = m00 + m11 + m22;
-        let mut rs: f64;
+        let mut rs: f32;
         if tr >= 0.0 {
             let mut s = (tr + 1.0).sqrt();
             self.w = s * 0.5;
@@ -217,7 +217,7 @@ impl Quat {
         res.y = iy * qw + iw * -qy + iz * -qx - ix * -qz;
         res.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
     }
-    pub fn lerp(&mut self, lhs: &Quat, rhs: &Quat, alpha: f64) {
+    pub fn lerp(&mut self, lhs: &Quat, rhs: &Quat, alpha: f32) {
         let lx = lhs.x;
         let ly = lhs.y;
         let lz = lhs.z;
@@ -291,16 +291,16 @@ impl Quat {
         let qz = self.z;
         let qw = self.w;
         let a2 = 2.0 * (qw * qy - qx * qz);
-        let x: f64;
-        let y: f64;
-        let z: f64;
+        let x: f32;
+        let y: f32;
+        let z: f32;
         if a2 <= -0.99999 {
             x = 2.0 * qx.atan2(qw);
-            y = -std::f64::consts::PI / 2.0;
+            y = -std::f32::consts::PI / 2.0;
             z = 0.0;
         } else if a2 >= 0.99999 {
             x = 2.0 * qx.atan2(qw);
-            y = std::f64::consts::PI / 2.0;
+            y = std::f32::consts::PI / 2.0;
             z = 0.0;
         } else {
             x = (2.0 * (qw * qx + qy * qz)).atan2(1.0 - 2.0 * (qx * qx + qy * qy));

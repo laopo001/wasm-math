@@ -5,17 +5,17 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 #[derive(Clone, Copy, Debug)]
 pub struct Vec2 {
-    pub x: f64,
-    pub y: f64,
+    pub x: f32,
+    pub y: f32,
 }
 
 #[wasm_bindgen]
 impl Vec2 {
     #[wasm_bindgen(constructor)]
-    pub fn new(x: f64, y: f64) -> Vec2 {
+    pub fn new(x: f32, y: f32) -> Vec2 {
         return Vec2 { x, y };
     }
-    pub fn data(&self) -> Box<[f64]> {
+    pub fn data(&self) -> Box<[f32]> {
         return Box::new([self.x, self.y]);
     }
     pub fn add(&mut self, other: &Vec2) {
@@ -30,14 +30,14 @@ impl Vec2 {
         self.x *= other.x;
         self.y *= other.y;
     }
-    pub fn dot(&self, other: &Vec2) -> f64 {
+    pub fn dot(&self, other: &Vec2) -> f32 {
         return self.x * other.x + self.y * other.y;
     }
     #[wasm_bindgen(js_name = lengthSq)]
-    pub fn length_sq(&self) -> f64 {
+    pub fn length_sq(&self) -> f32 {
         return self.x * self.x + self.y * self.y;
     }
-    pub fn length(&self) -> f64 {
+    pub fn length(&self) -> f32 {
         self.length_sq().sqrt()
     }
     pub fn normalize(&mut self) {
@@ -49,11 +49,11 @@ impl Vec2 {
         self.x *= inv;
         self.y *= inv;
     }
-    pub fn scale(&mut self, scalar: f64) {
+    pub fn scale(&mut self, scalar: f32) {
         self.x *= scalar;
         self.y *= scalar;
     }
-    pub fn set(&mut self, x: f64, y: f64) {
+    pub fn set(&mut self, x: f32, y: f32) {
         self.x = x;
         self.y = y;
     }
@@ -66,7 +66,7 @@ impl Vec2 {
     pub fn equals(&self, other: &Vec2) -> bool {
         return self.x == other.x && self.y == other.y;
     }
-    pub fn lerp(&mut self, l: &Vec2, r: &Vec2, alpha: f64) {
+    pub fn lerp(&mut self, l: &Vec2, r: &Vec2, alpha: f32) {
         self.x = l.x + alpha * (r.x - l.x);
         self.y = l.y + alpha * (r.y - l.y);
     }

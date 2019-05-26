@@ -41,4 +41,4 @@ fn main() {
 }
 
 #[allow(unused_variables)]
-fn test(v: &Vec<f64>) {}
+fn test(v: &Vec<f32>) {}

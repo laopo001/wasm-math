@@ -11,18 +11,18 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 #[derive(Clone, Copy, Debug)]
 pub struct Vec3 {
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
 }
 
 #[wasm_bindgen]
 impl Vec3 {
     #[wasm_bindgen(constructor)]
-    pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
+    pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
         return Vec3 { x, y, z };
     }
-    pub fn data(&self) -> Box<[f64]> {
+    pub fn data(&self) -> Box<[f32]> {
         return Box::new([self.x, self.y, self.z]);
     }
     pub fn add(&mut self, other: &Vec3) {
@@ -40,14 +40,14 @@ impl Vec3 {
         self.y *= other.y;
         self.z *= other.z;
     }
-    pub fn dot(&self, other: &Vec3) -> f64 {
+    pub fn dot(&self, other: &Vec3) -> f32 {
         return self.x * other.x + self.y * other.y + self.z * other.z;
     }
     #[wasm_bindgen(js_name = lengthSq)]
-    pub fn length_sq(&self) -> f64 {
+    pub fn length_sq(&self) -> f32 {
         return self.x * self.x + self.y * self.y + self.z * self.z;
     }
-    pub fn length(&self) -> f64 {
+    pub fn length(&self) -> f32 {
         self.length_sq().sqrt()
     }
     pub fn normalize(&mut self) {
@@ -60,12 +60,12 @@ impl Vec3 {
         self.y *= inv;
         self.z *= inv;
     }
-    pub fn scale(&mut self, scalar: f64) {
+    pub fn scale(&mut self, scalar: f32) {
         self.x *= scalar;
         self.y *= scalar;
         self.z *= scalar;
     }
-    pub fn set(&mut self, x: f64, y: f64, z: f64) {
+    pub fn set(&mut self, x: f32, y: f32, z: f32) {
         self.x = x;
         self.y = y;
         self.z = z;
@@ -79,7 +79,7 @@ impl Vec3 {
     pub fn equals(&self, other: &Vec3) -> bool {
         return self.x == other.x && self.y == other.y && self.z == other.z;
     }
-    pub fn lerp(&mut self, l: &Vec3, r: &Vec3, alpha: f64) {
+    pub fn lerp(&mut self, l: &Vec3, r: &Vec3, alpha: f32) {
         self.x = l.x + alpha * (r.x - l.x);
         self.y = l.y + alpha * (r.y - l.y);
         self.z = l.z + alpha * (r.z - l.z);
