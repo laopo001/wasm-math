@@ -60,7 +60,7 @@ impl Node {
         self.children.push(child);
     }
     #[wasm_bindgen(js_name = setLocalPosition)]
-    pub fn set_local_position(&mut self, x: f64, y: f64, z: f64) {
+    pub fn set_local_position(&mut self, x: f32, y: f32, z: f32) {
         self.local_position.set(x, y, z);
         if !self._dirty_local {
             self._dirtify(true);
@@ -70,11 +70,11 @@ impl Node {
         self.local_position.as_ref()
     }
     #[wasm_bindgen(js_name = getLocalPositionData)]
-    pub fn get_local_position_data(&mut self) -> Box<[f64]> {
+    pub fn get_local_position_data(&mut self) -> Box<[f32]> {
         self.get_local_position().data()
     }
     #[wasm_bindgen(js_name = setPosition)]
-    pub fn set_position(&mut self, x: f64, y: f64, z: f64) {
+    pub fn set_position(&mut self, x: f32, y: f32, z: f32) {
         unsafe {
             if self.parent.is_null() {
                 self.local_position.set(x, y, z);
@@ -99,7 +99,7 @@ impl Node {
         return self.world_position.as_ref();
     }
     #[wasm_bindgen(js_name = getPositionData)]
-    pub fn get_position_data(&mut self) -> Box<[f64]> {
+    pub fn get_position_data(&mut self) -> Box<[f32]> {
         self.get_position().data()
     }
     fn get_rotation(&mut self) -> &Quat {
@@ -110,7 +110,7 @@ impl Node {
         }
     }
     #[wasm_bindgen(js_name = setLocalEulerAngles)]
-    pub fn set_local_euler_angles(&mut self, x: f64, y: f64, z: f64) {
+    pub fn set_local_euler_angles(&mut self, x: f32, y: f32, z: f32) {
         self.local_rotation.set_from_euler_angles(x, y, z);
         if !self._dirty_local {
             self._dirtify(true);
@@ -122,11 +122,11 @@ impl Node {
         return self.local_euler_angle.as_ref();
     }
     #[wasm_bindgen(js_name = getLocalEulerAnglesData)]
-    pub fn get_local_enler_angles_data(&mut self) -> Box<[f64]> {
+    pub fn get_local_enler_angles_data(&mut self) -> Box<[f32]> {
         self.get_local_euler_angles().data()
     }
     #[wasm_bindgen(js_name = setEulerAngles)]
-    pub fn set_euler_angles(&mut self, x: f64, y: f64, z: f64) {
+    pub fn set_euler_angles(&mut self, x: f32, y: f32, z: f32) {
         self.local_rotation.set_from_euler_angles(x, y, z);
         unsafe {
             if !self.parent.is_null() {
@@ -148,7 +148,7 @@ impl Node {
         }
     }
     #[wasm_bindgen(js_name = getEulerAnglesData)]
-    pub fn get_enler_angles_data(&mut self) -> Box<[f64]> {
+    pub fn get_enler_angles_data(&mut self) -> Box<[f32]> {
         self.get_euler_angles().data()
     }
 
@@ -165,7 +165,7 @@ impl Node {
         return self.world_transform.get();
     }
     #[wasm_bindgen(js_name = getWorldTransformData)]
-    pub fn get_world_transform_data(&mut self) -> Box<[f64]> {
+    pub fn get_world_transform_data(&mut self) -> Box<[f32]> {
         let ptr = self.get_world_transform();
         unsafe {
             return (&*ptr).data();
@@ -178,14 +178,14 @@ impl Node {
         return self.local_transform.get();
     }
     #[wasm_bindgen(js_name = getLocalTransformData)]
-    pub fn get_local_transform_data(&mut self) -> Box<[f64]> {
+    pub fn get_local_transform_data(&mut self) -> Box<[f32]> {
         let ptr = self.get_local_transform();
         unsafe {
             return (&*ptr).data();
         }
     }
     #[wasm_bindgen(js_name = setLocalScale)]
-    pub fn set_local_scale(&mut self, x: f64, y: f64, z: f64) {
+    pub fn set_local_scale(&mut self, x: f32, y: f32, z: f32) {
         self.local_scale.as_mut().set(x, y, z);
         if !self._dirty_local {
             self._dirtify(true);
@@ -195,7 +195,7 @@ impl Node {
         self.local_scale.as_ref()
     }
     #[wasm_bindgen(js_name = getLocalScaleData)]
-    pub fn get_local_scale_data(&mut self) -> Box<[f64]> {
+    pub fn get_local_scale_data(&mut self) -> Box<[f32]> {
         self.get_local_scale().data()
     }
     fn _dirtify(&mut self, local: bool) {
@@ -327,7 +327,7 @@ fn test_child_set_get_local_angles() {
             .data()
             .into_iter()
             .map(|x| x.round())
-            .collect::<Box<[f64]>>(),
+            .collect::<Box<[f32]>>(),
         Vec3::new(1.0, 2.0, 3.0).data()
     );
 }
@@ -348,7 +348,7 @@ fn test_child_set_get_angles() {
             .data()
             .into_iter()
             .map(|x| x.round())
-            .collect::<Box<[f64]>>(),
+            .collect::<Box<[f32]>>(),
         Vec3::new(3.0, 0.0, 0.0).data()
     );
     grandson.set_euler_angles(0.0, 0.0, 0.0);
@@ -358,7 +358,7 @@ fn test_child_set_get_angles() {
             .data()
             .into_iter()
             .map(|x| x.round())
-            .collect::<Box<[f64]>>(),
+            .collect::<Box<[f32]>>(),
         Vec3::new(0.0, 0.0, 0.0).data()
     );
     assert_eq!(
@@ -367,7 +367,7 @@ fn test_child_set_get_angles() {
             .data()
             .into_iter()
             .map(|x| x.round())
-            .collect::<Box<[f64]>>(),
+            .collect::<Box<[f32]>>(),
         Vec3::new(-2.0, 0.0, 0.0).data()
     );
 }
@@ -382,7 +382,7 @@ fn test_child_set_get_local_scale() {
             .data()
             .into_iter()
             .map(|x| x.round())
-            .collect::<Box<[f64]>>(),
+            .collect::<Box<[f32]>>(),
         Vec3::new(1.0, 2.0, 3.0).data()
     );
 }

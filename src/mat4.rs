@@ -15,29 +15,29 @@ extern "C" {
 #[wasm_bindgen]
 #[derive(Clone, Debug)]
 pub struct Mat4 {
-    pub(crate) data: Box<[f64; 16]>,
+    pub(crate) data: Box<[f32; 16]>,
 }
 
 #[wasm_bindgen]
 impl Mat4 {
     #[wasm_bindgen(constructor)]
     pub fn new(
-        n0: f64,
-        n1: f64,
-        n2: f64,
-        n3: f64,
-        n4: f64,
-        n5: f64,
-        n6: f64,
-        n7: f64,
-        n8: f64,
-        n9: f64,
-        n10: f64,
-        n11: f64,
-        n12: f64,
-        n13: f64,
-        n14: f64,
-        n15: f64,
+        n0: f32,
+        n1: f32,
+        n2: f32,
+        n3: f32,
+        n4: f32,
+        n5: f32,
+        n6: f32,
+        n7: f32,
+        n8: f32,
+        n9: f32,
+        n10: f32,
+        n11: f32,
+        n12: f32,
+        n13: f32,
+        n14: f32,
+        n15: f32,
     ) -> Self {
         return Mat4 {
             data: Box::new([
@@ -65,27 +65,27 @@ impl Mat4 {
         r[14] += a[14];
         r[15] += a[15];
     }
-    pub fn data(&self) -> Box<[f64]> {
+    pub fn data(&self) -> Box<[f32]> {
         self.data.clone()
     }
     pub fn set(
         &mut self,
-        n0: f64,
-        n1: f64,
-        n2: f64,
-        n3: f64,
-        n4: f64,
-        n5: f64,
-        n6: f64,
-        n7: f64,
-        n8: f64,
-        n9: f64,
-        n10: f64,
-        n11: f64,
-        n12: f64,
-        n13: f64,
-        n14: f64,
-        n15: f64,
+        n0: f32,
+        n1: f32,
+        n2: f32,
+        n3: f32,
+        n4: f32,
+        n5: f32,
+        n6: f32,
+        n7: f32,
+        n8: f32,
+        n9: f32,
+        n10: f32,
+        n11: f32,
+        n12: f32,
+        n13: f32,
+        n14: f32,
+        n15: f32,
     ) {
         let r = self.data.as_mut();
         r[0] = n0;
@@ -170,7 +170,7 @@ impl Mat4 {
             && r[15] == a[15];
     }
     #[wasm_bindgen(js_name = setTranslate)]
-    pub fn set_translate(&mut self, x: f64, y: f64, z: f64) {
+    pub fn set_translate(&mut self, x: f32, y: f32, z: f32) {
         let m = self.data.as_mut();
         m[12] = x;
         m[13] = y;
@@ -191,7 +191,7 @@ impl Mat4 {
         res.set(x, y, z);
     }
     #[wasm_bindgen(js_name = setFromAxisAngle)]
-    pub fn set_from_axis_angle(&mut self, axis: &Vec3, angle: f64) {
+    pub fn set_from_axis_angle(&mut self, axis: &Vec3, angle: f32) {
         let m = self.data.as_mut();
         let angle = angle * DEG_TO_RAD;
         let x = axis.x;
@@ -276,10 +276,10 @@ impl Mat4 {
         let sz = scale.z;
 
         let m = self.data.as_ref();
-        let x: f64;
+        let x: f32;
         let y = (-m[2] / sx).asin();
-        let z: f64;
-        let half_pi = std::f64::consts::PI * 0.5;
+        let z: f32;
+        let half_pi = std::f32::consts::PI * 0.5;
         if y < half_pi {
             if y > -half_pi {
                 x = (m[6] / sy).atan2(m[10] / sz);
@@ -296,7 +296,7 @@ impl Mat4 {
         eulers.scale(RAD_TO_DEG);
     }
     #[wasm_bindgen(js_name = setScale)]
-    pub fn set_scale(&mut self, x: f64, y: f64, z: f64) {
+    pub fn set_scale(&mut self, x: f32, y: f32, z: f32) {
         let m = self.data.as_mut();
         m[0] = x;
         m[5] = y;
@@ -347,7 +347,7 @@ impl Mat4 {
         m[15] = 1.0;
     }
     pub fn transpose(&mut self) {
-        let mut tmp: f64;
+        let mut tmp: f32;
         let m = self.data.as_mut();
         tmp = m[1];
         m[1] = m[4];

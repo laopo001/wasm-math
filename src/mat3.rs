@@ -5,41 +5,41 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 #[derive(Clone, Debug)]
 pub struct Mat3 {
-    pub(crate) data: [f64; 9],
+    pub(crate) data: [f32; 9],
 }
 
 #[wasm_bindgen]
 impl Mat3 {
     #[wasm_bindgen(constructor)]
     pub fn new(
-        n0: f64,
-        n1: f64,
-        n2: f64,
-        n3: f64,
-        n4: f64,
-        n5: f64,
-        n6: f64,
-        n7: f64,
-        n8: f64,
+        n0: f32,
+        n1: f32,
+        n2: f32,
+        n3: f32,
+        n4: f32,
+        n5: f32,
+        n6: f32,
+        n7: f32,
+        n8: f32,
     ) -> Self {
         return Mat3 {
             data: [n0, n1, n2, n3, n4, n5, n6, n7, n8],
         };
     }
-    pub fn data(&self) -> Box<[f64]> {
+    pub fn data(&self) -> Box<[f32]> {
         Box::new(self.data)
     }
     pub fn set(
         &mut self,
-        n0: f64,
-        n1: f64,
-        n2: f64,
-        n3: f64,
-        n4: f64,
-        n5: f64,
-        n6: f64,
-        n7: f64,
-        n8: f64,
+        n0: f32,
+        n1: f32,
+        n2: f32,
+        n3: f32,
+        n4: f32,
+        n5: f32,
+        n6: f32,
+        n7: f32,
+        n8: f32,
     ) {
         let mut r = self.data;
         r[0] = n0;
@@ -108,7 +108,7 @@ impl Mat3 {
     }
     pub fn transpose(&mut self) {
         let mut m = self.data;
-        let mut tmp: f64;
+        let mut tmp: f32;
         tmp = m[1];
         m[1] = m[3];
         m[3] = tmp;
