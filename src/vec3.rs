@@ -30,15 +30,30 @@ impl Vec3 {
         self.y += other.y;
         self.z += other.z;
     }
+    pub fn add2(&mut self, a: &Vec3, b: &Vec3) {
+        self.x = a.x + b.x;
+        self.y = a.y + b.y;
+        self.z = a.y + b.y;
+    }
     pub fn sub(&mut self, other: &Vec3) {
         self.x -= other.x;
         self.y -= other.y;
         self.z -= other.z;
     }
+    pub fn sub2(&mut self, a: &Vec3, b: &Vec3) {
+        self.x = a.x - b.x;
+        self.y = a.y - b.y;
+        self.z = a.y - b.y;
+    }
     pub fn mul(&mut self, other: Vec3) {
         self.x *= other.x;
         self.y *= other.y;
         self.z *= other.z;
+    }
+    pub fn mul2(&mut self, a: &Vec3, b: &Vec3) {
+        self.x = a.x * b.x;
+        self.y = a.y * b.y;
+        self.z = a.y * b.y;
     }
     pub fn dot(&self, other: &Vec3) -> f64 {
         return self.x * other.x + self.y * other.y + self.z * other.z;
