@@ -1,7 +1,7 @@
 #[warn(dead_code)]
 extern crate wasm_bindgen;
 
-use std::ops::{Add, Sub};
+use std::ops::{Add, Sub, AddAssign, SubAssign, MulAssign, Mul};
 // use std::clone::Clone;
 use wasm_bindgen::prelude::*;
 // #[wasm_bindgen(typescript_custom_section)]
@@ -26,36 +26,36 @@ impl Vec3 {
 	pub fn data(&self) -> Box<[f32]> {
 		return Box::new([self.x, self.y, self.z]);
 	}
-	pub fn add(&mut self, other: &Vec3) {
-		self.x += other.x;
-		self.y += other.y;
-		self.z += other.z;
-	}
-	pub fn add2(&mut self, a: &Vec3, b: &Vec3) {
-		self.x = a.x + b.x;
-		self.y = a.y + b.y;
-		self.z = a.z + b.z;
-	}
-	pub fn sub(&mut self, other: &Vec3) {
-		self.x -= other.x;
-		self.y -= other.y;
-		self.z -= other.z;
-	}
-	pub fn sub2(&mut self, a: &Vec3, b: &Vec3) {
-		self.x = a.x - b.x;
-		self.y = a.y - b.y;
-		self.z = a.z - b.z;
-	}
-	pub fn mul(&mut self, other: &Vec3) {
-		self.x *= other.x;
-		self.y *= other.y;
-		self.z *= other.z;
-	}
-	pub fn mul2(&mut self, a: &Vec3, b: &Vec3) {
-		self.x = a.x * b.x;
-		self.y = a.y * b.y;
-		self.z = a.z * b.z;
-	}
+	//	pub fn add(&mut self, other: &Vec3) {
+//		self.x += other.x;
+//		self.y += other.y;
+//		self.z += other.z;
+//	}
+//	pub fn add2(&mut self, a: &Vec3, b: &Vec3) {
+//		self.x = a.x + b.x;
+//		self.y = a.y + b.y;
+//		self.z = a.z + b.z;
+//	}
+//	pub fn sub(&mut self, other: &Vec3) {
+//		self.x -= other.x;
+//		self.y -= other.y;
+//		self.z -= other.z;
+//	}
+//	pub fn sub2(&mut self, a: &Vec3, b: &Vec3) {
+//		self.x = a.x - b.x;
+//		self.y = a.y - b.y;
+//		self.z = a.z - b.z;
+//	}
+//	pub fn mul(&mut self, other: &Vec3) {
+//		self.x *= other.x;
+//		self.y *= other.y;
+//		self.z *= other.z;
+//	}
+//	pub fn mul2(&mut self, a: &Vec3, b: &Vec3) {
+//		self.x = a.x * b.x;
+//		self.y = a.y * b.y;
+//		self.z = a.z * b.z;
+//	}
 	pub fn dot(&self, other: &Vec3) -> f32 {
 		return self.x * other.x + self.y * other.y + self.z * other.z;
 	}
@@ -66,20 +66,22 @@ impl Vec3 {
 	pub fn length(&self) -> f32 {
 		self.length_sq().sqrt()
 	}
-	pub fn normalize(&mut self) {
+	pub fn normalize(mut self) -> Self {
 		let sq = self.length_sq();
 		if sq == 0.0 {
-			return;
+			return self;
 		}
 		let inv = 1.0 / sq;
 		self.x *= inv;
 		self.y *= inv;
 		self.z *= inv;
+		self
 	}
-	pub fn scale(&mut self, scalar: f32) {
+	pub fn scale(mut self, scalar: f32) -> Self {
 		self.x *= scalar;
 		self.y *= scalar;
 		self.z *= scalar;
+		self
 	}
 	pub fn set(&mut self, x: f32, y: f32, z: f32) {
 		self.x = x;
@@ -117,28 +119,86 @@ impl PartialEq for Vec3 {
 	}
 }
 
-//impl Add for Vec3 {
-//	type Output = Vec3;
-//	fn add(self, other: Vec3) -> Vec3 {
-//		let mut res = Vec3::default();
-//		res.add2(&self, &other);
-//		res
-//	}
-//}
-//
-//impl Sub for Vec3 {
-//	type Output = Vec3;
-//	fn sub(self, other: Vec3) -> Vec3 {
-//		let mut res = Vec3::default();
-//		res.sub2(&self, &other);
-//		res
-//	}
-//}
+//impl Sized for Vec3 {}
+
+impl AsRef<Vec3> for Vec3 {
+	fn as_ref(&self) -> &Vec3 {
+		self
+	}
+}
+
+impl Add for Vec3 {
+	type Output = Vec3;
+	fn add(self, other: Vec3) -> Vec3 {
+		let mut res = Vec3::default();
+		res.x = self.x + other.x;
+		res.y = self.y + other.y;
+		res.z = self.z + other.z;
+		res
+	}
+}
+
+impl AddAssign for Vec3 {
+	fn add_assign(&mut self, other: Self) {
+		self.x += other.x;
+		self.y += other.y;
+		self.z += other.z;
+	}
+}
+
+impl Sub for Vec3 {
+	type Output = Vec3;
+	fn sub(self, other: Vec3) -> Vec3 {
+		let mut res = Vec3::default();
+		res.x = self.x - other.x;
+		res.y = self.y - other.y;
+		res.z = self.z - other.z;
+		res
+	}
+}
+
+impl SubAssign for Vec3 {
+	fn sub_assign(&mut self, other: Self) {
+		self.x -= other.x;
+		self.y -= other.y;
+		self.z -= other.z;
+	}
+}
+
+impl Mul for Vec3 {
+	type Output = Vec3;
+	fn mul(self, other: Vec3) -> Vec3 {
+		let mut res = Vec3::default();
+		res.x = self.x * other.x;
+		res.y = self.y * other.y;
+		res.z = self.z * other.z;
+		res
+	}
+}
+
+impl MulAssign for Vec3 {
+	fn mul_assign(&mut self, other: Self) {
+		self.x *= other.x;
+		self.y *= other.y;
+		self.z *= other.z;
+	}
+}
 
 #[test]
 fn test_add() {
-	let mut v1 = Vec3::new(0., 1., 2. );
-	let v2 = Vec3::new(0., 1., 2. );
-	v1.add(&v2);
-	assert_eq!(v1  ,Vec3::new(0., 2., 4. ));
+	let v1 = Vec3::new(0., 1., 2.);
+	let v2 = Vec3::new(0., 1., 2.);
+	assert_eq!(v1 + v2, Vec3::new(0., 2., 4.));
+}
+
+fn t<T: AsRef<Vec3>>(s: T) -> bool {
+	let v1 = Vec3::new(0., 1., 2.);
+	v1.equals(s.as_ref())
+}
+
+#[test]
+fn test_AsRef() {
+	let v1 = Vec3::new(0., 1., 2.);
+	let v2 = Vec3::new(0., 1., 2.);
+	assert!(t(v1));
 }
