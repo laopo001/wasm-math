@@ -1,7 +1,7 @@
 #[warn(dead_code)]
 extern crate wasm_bindgen;
 
-use std::ops::{Add, Sub, AddAssign, SubAssign, MulAssign, Mul};
+use std::ops::{Add, Sub, AddAssign, SubAssign, MulAssign, Mul, Rem};
 // use std::clone::Clone;
 use wasm_bindgen::prelude::*;
 // #[wasm_bindgen(typescript_custom_section)]
@@ -183,6 +183,21 @@ impl MulAssign for Vec3 {
 		self.z *= other.z;
 	}
 }
+
+impl Rem for Vec3 {
+	type Output = Self;
+	fn rem(self, b: Self) -> Self {
+		let mut res = Vec3::default();
+//		self.y*b.z-self.z*b.y
+//		self.z*b.x-self.x*b.z
+//		self.x*b.y-self.y*b.x
+		res.x = self.y * b.z - self.z * b.y;
+		res.y = self.z * b.x - self.x * b.z;
+		res.z = self.x * b.y - self.y * b.x;
+		res
+	}
+}
+
 
 #[test]
 fn test_add() {
