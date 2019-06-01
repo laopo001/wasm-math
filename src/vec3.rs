@@ -67,7 +67,7 @@ impl Vec3 {
 		self.length_sq().sqrt()
 	}
 	pub fn normalize(mut self) -> Self {
-		let sq = self.length_sq();
+		let sq = self.length();
 		if sq == 0.0 {
 			return self;
 		}
